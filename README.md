@@ -59,6 +59,14 @@ Motivation : points, étoiles (1 à 3 par niveau), 15 badges, série de jours �
 5. **ÉCRANS** — `SCREENS` + actions `ACT` (délégation d'événements, aucun framework).
 6. **SYNCHRO** — `Sync.push()` vers la table `learners` (voir `schema.sql`).
 
+## Dictée (niveaux Syllabes, Mots et Lecture → ✏️ Dictée)
+- **4 modes** : syllabes (lettres), mots en syllabes, mots lettre par lettre, phrases (remettre les mots dans l'ordre).
+- **3 niveaux de mots** : Facile (syllabes simples), Moyen (ou, on, an, ch, lettres muettes…), Difficile (ai, eau, oi, ph, gn…). En « Difficile », clavier complet avec les accents.
+- 🔊 réécouter, 🐢 lentement (syllabe par syllabe), image d'aide activable, 5 / 10 / 15 mots.
+- Une erreur : les cases fausses passent en rouge et l'enfant corrige. Deuxième erreur : la bonne réponse s'affiche. Fin : score, liste des mots, « Revoir mes erreurs ».
+- Les résultats vont dans l'espace parent (difficultés, à revoir).
+- **93 mots** en français (32 faciles, 32 moyens, 29 difficiles) et 14 phrases. Les mots ajoutés dans l'administration (avec leur niveau) entrent aussi dans la dictée.
+
 ## Langues
 - **Français** (alphabet latin).
 - **Maninka en N’Ko (ߒߞߏ)** : 7 voyelles, ߒ et 20 consonnes, syllabes (familles ߓ ߕ ߘ ߞ ߟ ߡ), 12 mots, 4 petites phrases, écriture de droite à gauche, police Noto Sans NKo incluse. Changer de langue : bouton 🌍 sur l’accueil ou Paramètres. Chaque langue a sa propre progression.
