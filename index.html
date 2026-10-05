@@ -22,7 +22,7 @@ html{-webkit-text-size-adjust:100%} body{overscroll-behavior-y:contain;user-sele
 :root{
   --paper:#FBFCF8; --line:#DCE3F4; --line-strong:#B4C3EA; --margin:#EF6F7F;
   --fg:#1D2142; --muted:#5D6387; --card:#FFFFFF; --edge:#E1E6F3; --ink:#2446B8; --on-ink:#FFFFFF;
-  --sky:#1F8AD6; --hibiscus:#E0407A; --leaf:#1F9D57; --mango:#F07D0A; --grape:#7A55E0; --lagoon:#0B9592; --sun:#E9A800; --brick:#C4492B;
+  --sky:#1F8AD6; --hibiscus:#E0407A; --leaf:#1F9D57; --mango:#F07D0A; --grape:#7A55E0; --lagoon:#0B9592; --sun:#E9A800; --brick:#C4492B; --berry:#A8357A;
   --good:#1A8F4C; --good-bg:#DCF5E6; --warn:#B66A00; --warn-bg:#FFEFCC; --bad:#D23646; --bad-bg:#FCE0E3;
   --syl-a:#2446B8; --syl-b:#D23646; --guide:#E4E9F7; --hl:#FFE58A;
   --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
@@ -32,13 +32,13 @@ html{-webkit-text-size-adjust:100%} body{overscroll-behavior-y:contain;user-sele
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --paper:#11162D; --line:#1E2647; --line-strong:#2F3B69; --margin:#A9475A;
   --fg:#EEF0FF; --muted:#A5ACD4; --card:#1A2143; --edge:#2A3360; --ink:#8EA8FF; --on-ink:#0E1430;
-  --sky:#2A8FD8; --hibiscus:#E04C82; --leaf:#22A35C; --mango:#F08419; --grape:#8462E8; --lagoon:#13A19D; --sun:#F5C53A; --brick:#D9573A;
+  --sky:#2A8FD8; --hibiscus:#E04C82; --leaf:#22A35C; --mango:#F08419; --grape:#8462E8; --lagoon:#13A19D; --sun:#F5C53A; --brick:#D9573A; --berry:#C9508F;
   --good:#4CD38A; --good-bg:#12392A; --warn:#F2B04A; --warn-bg:#3A2C10; --bad:#FF7A86; --bad-bg:#3D1922;
   --syl-a:#8EA8FF; --syl-b:#FF8A96; --guide:#26305A; --hl:#5A4B12; color-scheme:dark}}
 :root[data-theme="dark"]{
   --paper:#11162D; --line:#1E2647; --line-strong:#2F3B69; --margin:#A9475A;
   --fg:#EEF0FF; --muted:#A5ACD4; --card:#1A2143; --edge:#2A3360; --ink:#8EA8FF; --on-ink:#0E1430;
-  --sky:#2A8FD8; --hibiscus:#E04C82; --leaf:#22A35C; --mango:#F08419; --grape:#8462E8; --lagoon:#13A19D; --sun:#F5C53A; --brick:#D9573A;
+  --sky:#2A8FD8; --hibiscus:#E04C82; --leaf:#22A35C; --mango:#F08419; --grape:#8462E8; --lagoon:#13A19D; --sun:#F5C53A; --brick:#D9573A; --berry:#C9508F;
   --good:#4CD38A; --good-bg:#12392A; --warn:#F2B04A; --warn-bg:#3A2C10; --bad:#FF7A86; --bad-bg:#3D1922;
   --syl-a:#8EA8FF; --syl-b:#FF8A96; --guide:#26305A; --hl:#5A4B12; color-scheme:dark}
 
@@ -202,6 +202,14 @@ h1,h2,h3{margin:0;text-wrap:balance;line-height:1.1}
 .pool .opt.used{visibility:hidden}
 .feedback{min-height:40px;text-align:center;font-size:24px;font-weight:800}
 .feedback.good,.feedback .good{color:var(--good)}.feedback.bad,.feedback .bad{color:var(--bad)}
+.conj-table{display:flex;flex-direction:column;gap:6px}
+.conj-row{display:grid;grid-template-columns:5.5em 1fr auto;align-items:center;gap:10px;padding:8px 12px;border-radius:12px;background:var(--paper);border:2px solid var(--edge);text-align:left;font-size:22px}
+.conj-row .pr{color:var(--muted);font-weight:700;font-size:18px}.conj-row .fm{font-weight:700;min-width:0;overflow-wrap:anywhere}.conj-row .spk{font-size:18px;opacity:.7}
+.conj-row.lit{background:var(--hl);border-color:var(--sun)}
+.end{color:var(--hibiscus)}
+.conj-q{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.conj-q .read{font-size:clamp(26px,7.5vw,36px)}.conj-q .when{font-weight:800;color:var(--berry);font-size:18px}.conj-q .when.big{font-size:28px}
+.conj-q .blank{display:inline-block;min-width:2.2em;border-bottom:4px dashed var(--line-strong);color:var(--muted)}.conj-q .inf{color:var(--muted);font-size:.6em}
 .dict-slots{gap:6px}.dict-slots .slot{min-width:44px;height:58px;font-size:30px;padding:0 6px;border-radius:12px}
 .dict-slots.syl .slot{min-width:72px;height:66px;font-size:30px}.dict-slots.word .slot{min-width:64px;height:54px;font-size:22px}
 .slot.good{border-color:var(--good);background:var(--good-bg);color:var(--good)}.slot.bad{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
@@ -411,7 +419,8 @@ const LEVELS = [
  {id:'syllabes', name:'Syllabes', glyph:'ma', color:'var(--mango)', learn:'syllables', types:['listenSyll','completeSyll','buildSyll'], read:'syll'},
  {id:'mots', name:'Mots', glyph:'papa', color:'var(--grape)', learn:'words', types:['wordForImage','buildWord','listenWord'], read:'word'},
  {id:'lecture', name:'Lecture', glyph:'Lis', color:'var(--lagoon)', learn:'phrases', types:['phraseImage','missingWord','phraseImage'], read:'phrase'},
- {id:'ecriture', name:'Écriture', glyph:'✎', color:'var(--brick)', learn:'writing', types:['trace']}
+ {id:'ecriture', name:'Écriture', glyph:'✎', color:'var(--brick)', learn:'writing', types:['trace']},
+ {id:'conjugaison', name:'Conjugaison', glyph:'je suis', color:'var(--berry)', learn:'conj', types:[], requires:'mots', frOnly:true}
 ];
 
 const BADGES = [
@@ -424,6 +433,7 @@ const BADGES = [
  {id:'mots', ico:'📖', name:'Petit lecteur', desc:'Réussir les mots'},
  {id:'lecture', ico:'🦉', name:'Grand lecteur', desc:'Réussir la lecture'},
  {id:'ecriture', ico:'✍️', name:'Belle plume', desc:'Réussir l’écriture'},
+ {id:'conjugaison', ico:'📚', name:'Petit grammairien', desc:'Réussir toute la conjugaison'},
  {id:'traces5', ico:'🖍️', name:'Main sûre', desc:'5 tracés « bonne écriture »'},
  {id:'perfect', ico:'💯', name:'Sans faute', desc:'Un quiz à 100 %'},
  {id:'goal', ico:'🎯', name:'Objectif atteint', desc:'Atteindre l’objectif du jour'},
@@ -567,8 +577,8 @@ const aWord = W => A('W:'+W.w, W.tr||W.w.toLowerCase());
 
 /* ---------- 4. PROGRESSION ---------- */
 const levelState = id => P.levels[id] || (P.levels[id]={best:0,stars:0,passed:false,attempts:0,practice:0});
-const isUnlocked = i => S.unlockAll || i===0 || !!P.levels[LEVELS[i-1].id]?.passed;
-const currentLevel = () => { for(let i=0;i<LEVELS.length;i++){ if(isUnlocked(i)&&!P.levels[LEVELS[i].id]?.passed) return i; } return LEVELS.length-1; };
+const isUnlocked = i => { const L=LEVELS[i]; if(L.frOnly&&C.noCase) return false; return S.unlockAll || i===0 || !!P.levels[L.requires||LEVELS[i-1].id]?.passed; };
+const currentLevel = () => { for(let i=0;i<LEVELS.length;i++){ if(isUnlocked(i)&&!P.levels[LEVELS[i].id]?.passed) return i; } return LEVELS.findIndex(l=>l.id==='ecriture'); };
 const totalStars = () => LEVELS.reduce((s,l)=>s+(P.levels[l.id]?.stars||0),0);
 const passedCount = () => LEVELS.filter(l=>P.levels[l.id]?.passed).length;
 function streak(){ let n=0; const d=new Date(); const active=k=>{ const x=P.daily[k]; return x&&(x.ex>0||x.learned>0); };
@@ -621,7 +631,8 @@ SCREENS.home = () => { const prof=PROFILES.find(p=>p.id===S.profile); const li=c
   ${INSTALL_EVT&&!isStandalone()?`<button class="btn ghost" data-act="install">📲 Installer l’application sur ce téléphone</button>`:''}
   <button class="link-parent" data-act="pin" data-arg="parent">Espace parent / enseignant</button>
  </div>`; };
-ACT.start = () => go('level',{i:currentLevel()});
+const openLevelScreen = i => LEVELS[i].learn==='conj' ? go('conj',{i}) : go('level',{i});
+ACT.start = () => openLevelScreen(currentLevel());
 ACT.go = a => go(a);
 ACT.back = () => { Rec.cancel(); back(); };
 ACT.home = () => { NAV=[]; CUR=null; go('home',{},true); };
@@ -633,7 +644,7 @@ SCREENS.levels = () => `${topbar('Mes leçons')}
    return `<button class="lvl ${un?'':'locked'}" style="--c:${l.color}" data-act="openLevel" data-arg="${i}"><span class="glyph">${esc(glyphOf(l))}</span>
    <span class="info"><span class="n">Niveau ${i+1}</span><br><span class="name">${esc(l.name)}</span><br>${starsHtml(st.stars||0)}</span>
    <span class="status" aria-label="${st.passed?'terminé':un?'ouvert':'verrouillé'}">${st.passed?'✅':un?'▶️':'🔒'}</span></button>`; }).join('')}</div>`;
-ACT.openLevel = a => { const i=+a; if(!isUnlocked(i)){ sfxBad(); toast(`🔒 Réussis d’abord le quiz du niveau ${i} (${S.threshold} %).`); return; } go('level',{i}); };
+ACT.openLevel = a => { const i=+a, L=LEVELS[i]; if(L.frOnly&&C.noCase){ toast('La conjugaison est disponible en français.'); return; } if(!isUnlocked(i)){ sfxBad(); const req=L.requires?LEVELS.findIndex(x=>x.id===L.requires):i-1; toast(`🔒 Réussis d’abord le quiz du niveau ${req+1} (${S.threshold} %).`); return; } openLevelScreen(i); };
 
 /* ----- Page d’un niveau ----- */
 SCREENS.level = ({i}) => { const L=LEVELS[i], st=levelState(L.id); const isW=L.learn==='writing';
@@ -780,7 +791,7 @@ const G = {
 
 /* ----- Séance d’exercices (pratique ou quiz) ----- */
 let SES=null;
-function startSession(i, mode){ const L=LEVELS[i]; if(L.learn==='writing'){ startTraceSession(i,mode); return; }
+function startSession(i, mode){ const L=LEVELS[i]; if(L.learn==='conj'){ startConj(SES&&SES.conj!=null?SES.conj:0, mode); return; } if(L.learn==='writing'){ startTraceSession(i,mode); return; }
  const n = mode==='quiz'?10:8; const qs=[]; const custom=(C.exercises||[]).filter(e=>e.level===L.id); let guard=0;
  while(qs.length<n && guard++<200){ let q; if(custom.length && Math.random()<.25) q=G.custom(pick(custom)); else q=G[pick((C.levelTypes&&C.levelTypes[L.id])||L.types)]();
   if(qs.length && qs[qs.length-1].key===q.key) continue; qs.push(q); }
@@ -800,7 +811,7 @@ ACT.replay = () => { const q=SES?.qs[SES.k]; if(q) say(q.replay||q.say); };
 ACT.quitSession = () => confirmBox('Arrêter les exercices ?', ()=>{ SES=null; back(); });
 function feedback(ok, msg){ const fb=$('#fb'); if(fb){ fb.className='feedback '+(ok?'good':'bad'); fb.textContent=msg; } }
 function resolve(ok, el){ const q=SES.qs[SES.k]; if(SES.done) return;
- if(ok){ SES.done=true; if(SES.first) SES.score++; SES.res[SES.k]=SES.first; record(q.key, SES.first); el&&el.classList.add('ok'); sfxGood(); const m=pick(PRAISE); feedback(true,m+' 🎉'); say([m]); setTimeout(nextQ, 1300); return; }
+ if(ok){ SES.done=true; if(SES.first) SES.score++; SES.res[SES.k]=SES.first; record(q.key, SES.first); el&&el.classList.add('ok'); sfxGood(); const m=pick(PRAISE); feedback(true,m+' 🎉'+(q.after?' — '+q.after:'')); say([m, q.after?300:null, q.after||null]); setTimeout(nextQ, 1300); return; }
  sfxBad(); el&&el.classList.add('ko','shake');
  if(SES.mode==='quiz'){ SES.done=true; SES.res[SES.k]=false; record(q.key,false); revealAnswer(q); feedback(false,'La bonne réponse est en vert.'); setTimeout(nextQ, 1900); return; }
  if(SES.first){ SES.first=false; record(q.key,false); } const m=pick(RETRY); feedback(false,m); say([m]); }
@@ -814,10 +825,10 @@ ACT.slot = a => { const q=SES.qs[SES.k]; if(SES.done) return; const j=+a; if(SES
  rerender(); if(Array.from({length:q.slots}).every((_,x)=>SES.build[x]!=null)){ const ok=SES.build.map(x=>q.tiles[x]).join('|')===q.answer.join('|');
   setTimeout(()=>{ if(ok){ $$('.slot').forEach(s=>s.classList.add('ok')); resolve(true); } else { resolve(false); if(SES.mode==='quiz'){ feedback(false,'Réponse : '+wcase(q.answer.join(''))); } else { setTimeout(()=>{ if(!SES.done){ SES.build=[]; rerender(); feedback(false,pick(RETRY)); } },700); } } },350); } };
 ACT.unslot = a => { if(SES.done) return; SES.build[+a]=null; SES.build=SES.build.map(x=>x??null); rerender(); };
-function finishSession(){ const L=LEVELS[SES.i], st=levelState(L.id); const pct=Math.round(SES.score/SES.qs.length*100); let stars=0, passed=false, newly=false;
+function finishSession(){ if(SES.conj!=null) return finishConj(); const L=LEVELS[SES.i], st=levelState(L.id); const pct=Math.round(SES.score/SES.qs.length*100); let stars=0, passed=false, newly=false;
  if(SES.mode==='quiz'){ st.attempts++; stars = pct>=95?3: pct>=85?2: pct>=S.threshold?1:0; passed = pct>=S.threshold; st.best=Math.max(st.best,pct); st.stars=Math.max(st.stars,stars); if(passed&&!st.passed){ st.passed=true; newly=true; } if(pct===100) award('perfect'); checkBadges(); }
  saveProg(); SES.result={pct,stars,passed,newly}; go('result',{},true); }
-SCREENS.result = () => { const r=SES.result, L=LEVELS[SES.i], quiz=SES.mode==='quiz'; const next=LEVELS[SES.i+1];
+SCREENS.result = () => { if(SES.conj!=null) return conjResult(); const r=SES.result, L=LEVELS[SES.i], quiz=SES.mode==='quiz'; const next=LEVELS[SES.i+1];
  return `<div class="result fade-in"><div style="font-size:64px">${quiz?(r.passed?'🏆':'💪'):'🎉'}</div>
   <h2 style="font-size:30px">${quiz?(r.passed?'Niveau réussi !':'Encore un petit effort !'):'Séance terminée !'}</h2>
   <div class="big">${SES.score} / ${SES.qs.length}</div>
@@ -830,7 +841,7 @@ SCREENS.result = () => { const r=SES.result, L=LEVELS[SES.i], quiz=SES.mode==='q
    <button class="btn ghost" data-act="back">Retour au niveau</button></div></div>`; };
 AFTER.result = () => { const r=SES.result; if(SES.mode==='quiz'&&r.passed){ sfxWin(); confetti(); say(['Bravo ! Tu as réussi le niveau.']); } else if(SES.mode==='quiz'){ say(['Encore un petit effort. Tu vas y arriver !']); } else say(['Bravo ! Séance terminée.']); };
 ACT.again = () => startSession(SES.i, SES.mode);
-ACT.toLevel = a => { NAV=[{name:'home',params:{}},{name:'levels',params:{}}]; CUR={name:'level',params:{i:+a}}; render(true); };
+ACT.toLevel = a => { NAV=[{name:'home',params:{}},{name:'levels',params:{}}]; CUR={name:LEVELS[+a].learn==='conj'?'conj':'level',params:{i:+a}}; render(true); };
 
 /* ----- 4b. Écriture : tracé au doigt + évaluation automatique ----- */
 function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
@@ -1015,6 +1026,119 @@ ACT.dictHear = a => say(DIC.items[+a].say);
 ACT.dictRetry = () => startDict(DIC.mode,DIC.lvl,DIC.img,shuffle(DIC.items.filter((_,j)=>!(DIC.res[j]>=1))));
 ACT.dictAgain = () => { const d=DIC; startDict(d.mode,d.lvl,d.img,shuffle(dictPool(d.mode,d.lvl)).slice(0,d.items.length)); };
 
+/* ----- Conjugaison : 7 leçons progressives (présent, futur, imparfait, passé composé) ----- */
+const PRON = ['je','tu','il','nous','vous','ils'];
+const PRON_LEARN = ['je','tu','il / elle','nous','vous','ils / elles'];
+const CONJ_IRR = {
+ present:{ 'être':'suis es est sommes êtes sont', avoir:'ai as a avons avez ont', aller:'vais vas va allons allez vont', faire:'fais fais fait faisons faites font',
+  dire:'dis dis dit disons dites disent', venir:'viens viens vient venons venez viennent', voir:'vois vois voit voyons voyez voient', prendre:'prends prends prend prenons prenez prennent',
+  pouvoir:'peux peux peut pouvons pouvez peuvent', vouloir:'veux veux veut voulons voulez veulent', savoir:'sais sais sait savons savez savent', finir:'finis finis finit finissons finissez finissent',
+  boire:'bois bois boit buvons buvez boivent', dormir:'dors dors dort dormons dormez dorment', lire:'lis lis lit lisons lisez lisent', 'écrire':'écris écris écrit écrivons écrivez écrivent',
+  manger:'mange manges mange mangeons mangez mangent' },
+ futur:{ 'être':'ser', avoir:'aur', aller:'ir', faire:'fer', venir:'viendr', voir:'verr', pouvoir:'pourr', vouloir:'voudr', savoir:'saur' },
+ imparfait:{ 'être':'ét' },
+ pp:{ 'être':'été', avoir:'eu', faire:'fait', dire:'dit', voir:'vu', prendre:'pris', pouvoir:'pu', vouloir:'voulu', savoir:'su', boire:'bu', lire:'lu', 'écrire':'écrit', venir:'venu', finir:'fini', dormir:'dormi' }
+};
+const ETRE_AUX = ['aller','venir','tomber','partir','arriver'];
+function conjugate(v,t){
+ if(t==='present'){ if(CONJ_IRR.present[v]) return CONJ_IRR.present[v].split(' '); const st=v.slice(0,-2); return ['e','es','e','ons','ez','ent'].map(e=>st+e); }
+ if(t==='futur'){ const st=CONJ_IRR.futur[v] || (v.endsWith('re')?v.slice(0,-1):v); return ['ai','as','a','ons','ez','ont'].map(e=>st+e); }
+ if(t==='imparfait'){ const st=CONJ_IRR.imparfait[v] || conjugate(v,'present')[3].slice(0,-3); return ['ais','ais','ait','ions','iez','aient'].map(e=>(e[0]==='i'&&st.endsWith('ge')?st.slice(0,-1):st)+e); }
+ if(t==='pc'){ const pp=CONJ_IRR.pp[v] || v.slice(0,-2)+'é'; const etre=ETRE_AUX.includes(v); return conjugate(etre?'être':'avoir','present').map((a,i)=>a+' '+pp+(etre&&i>=3?'s':'')); }
+}
+const prShow = (i,form) => i===0 ? (/^[aeiouyéèêâh]/i.test(form)?'j’':'je') : PRON[i];
+const withPron = (i,form) => i===0 && /^[aeiouyéèêâh]/i.test(form) ? 'j’'+form : PRON[i]+' '+form;
+const TENSES = { present:{name:'Présent', when:'Aujourd’hui'}, futur:{name:'Futur', when:'Demain'}, imparfait:{name:'Imparfait', when:'Avant'}, pc:{name:'Passé composé', when:'Hier'} };
+const CONJ = [
+ {id:'c1', name:'Être et avoir', tense:'present', verbs:['être','avoir'], rule:'Être et avoir sont les verbes les plus utilisés. On les apprend par cœur : je suis, j’ai.', types:['cForm','cPron','cForm','cVerb']},
+ {id:'c2', name:'Les verbes en -er', tense:'present', verbs:['parler','chanter','danser','jouer','marcher','regarder','donner','aimer','écouter','manger','travailler','laver'], rule:'Au présent, les verbes en -er finissent par : -e, -es, -e, -ons, -ez, -ent. Attention : nous mangeons.', types:['cForm','cEnding','cPron','cVerb']},
+ {id:'c3', name:'Aller, faire, venir…', tense:'present', verbs:['aller','faire','dire','venir','voir','prendre'], rule:'Ces verbes sont irréguliers : ils changent beaucoup. On les apprend par cœur.', types:['cForm','cPron','cForm','cVerb']},
+ {id:'c4', name:'Pouvoir, vouloir, finir…', tense:'present', verbs:['pouvoir','vouloir','savoir','finir','boire','dormir','lire','écrire'], rule:'Au singulier, ces verbes finissent souvent par : -s, -s, -t (je finis, tu finis, il finit).', types:['cForm','cEnding','cPron','cVerb']},
+ {id:'c5', name:'Le futur', tense:'futur', verbs:['être','avoir','aller','faire','parler','manger','finir','venir','pouvoir','voir'], rule:'Demain… Le futur finit par : -ai, -as, -a, -ons, -ez, -ont (je parlerai, nous irons).', types:['cForm','cEnding','cPron','cTime']},
+ {id:'c6', name:'L’imparfait', tense:'imparfait', verbs:['être','avoir','aller','faire','parler','manger','finir','jouer','dormir','venir'], rule:'Avant, autrefois… L’imparfait finit par : -ais, -ais, -ait, -ions, -iez, -aient (je jouais).', types:['cForm','cEnding','cPron','cTime']},
+ {id:'c7', name:'Le passé composé', tense:'pc', verbs:['avoir','être','parler','manger','finir','faire','dire','voir','prendre','boire','lire','aller','venir','tomber'], rule:'Hier… Passé composé = avoir ou être au présent + participe passé : j’ai mangé, je suis allé.', types:['cForm','cAux','cPron','cTime']}
+];
+const conjState = id => (P.conj=P.conj||{})[id] || (P.conj[id]={best:0,stars:0,passed:false,attempts:0});
+const conjUnlocked = k => S.unlockAll || k===0 || !!(P.conj&&P.conj[CONJ[k-1].id]?.passed);
+const lcp = arr => { let p=arr[0]||''; for(const x of arr) while(!x.startsWith(p)) p=p.slice(0,-1); return p; };
+function formHtml(forms,i,t){ const f=forms[i];
+ if(t==='pc'){ const sp=f.indexOf(' '); return `<span>${esc(f.slice(0,sp))}</span> <b class="end">${esc(f.slice(sp+1))}</b>`; }
+ const st=lcp(forms); return st.length>=2 ? `${esc(f.slice(0,st.length))}<b class="end">${esc(f.slice(st.length))}</b>` : `<b class="end">${esc(f)}</b>`; }
+const conjLevelIndex = () => LEVELS.findIndex(l=>l.id==='conjugaison');
+SCREENS.conj = () => { const L=LEVELS[conjLevelIndex()]; return `${topbar('Conjugaison')}<div class="stack fade-in">
+ <div class="lvl-head" style="background:${L.color}"><span class="glyph" style="font-size:28px">${esc(L.glyph)}</span><div><h2 style="font-size:26px">Conjugaison</h2><div>Les verbes les plus utilisés, leçon après leçon.</div></div></div>
+ <div class="path">${CONJ.map((c,k)=>{ const st=P.conj?.[c.id]||{}; const un=conjUnlocked(k); return `<button class="lvl ${un?'':'locked'}" style="--c:${L.color}" data-act="conjOpen" data-arg="${k}">
+  <span class="glyph" style="font-size:15px;line-height:1.1;text-align:center">${esc(TENSES[c.tense].name)}</span>
+  <span class="info"><span class="n">Leçon ${k+1} · ${esc(TENSES[c.tense].when)}</span><br><span class="name">${esc(c.name)}</span><br><span class="note">${c.verbs.slice(0,5).map(esc).join(', ')}${c.verbs.length>5?'…':''}</span><br>${starsHtml(st.stars||0)}</span>
+  <span class="status">${st.passed?'✅':un?'▶️':'🔒'}</span></button>`; }).join('')}</div>
+ <p class="note">Réussis le quiz d’une leçon (${S.threshold} %) pour ouvrir la suivante.</p></div>`; };
+ACT.conjOpen = a => { const k=+a; if(!conjUnlocked(k)){ sfxBad(); toast(`🔒 Réussis d’abord la leçon ${k}.`); return; } go('conjLesson',{k,v:0}, CUR.name==='result'); };
+SCREENS.conjLesson = p => { const c=CONJ[p.k], v=c.verbs[p.v||0], forms=conjugate(v,c.tense);
+ return `${topbar(esc(c.name))}<div class="stack fade-in">
+  <div class="strip">${c.verbs.map((x,j)=>`<button class="${j===(p.v||0)?'on':''}" style="font-family:var(--f-display);font-size:17px" data-act="conjVerb" data-arg="${j}">${esc(x)}</button>`).join('')}</div>
+  <div class="card stack"><div class="row" style="justify-content:space-between"><span class="chip" style="color:var(--berry)">${esc(TENSES[c.tense].when)} · ${esc(TENSES[c.tense].name)}</span><b class="read" style="font-size:22px">${esc(v)}</b></div>
+   <div class="conj-table" id="ctab">${forms.map((f,i)=>`<button class="conj-row" data-act="conjSay" data-arg="${i}"><span class="pr">${esc(i===0&&/^[aeiouyéèêâh]/i.test(f)?'j’':PRON_LEARN[i])}</span><span class="fm read">${formHtml(forms,i,c.tense)}</span><span class="spk">🔊</span></button>`).join('')}</div>
+   <button class="btn btn-listen small" data-act="conjAll">🔊 ÉCOUTER TOUT</button></div>
+  <div class="card"><b>💡 À retenir</b><p style="margin:6px 0 0">${esc(c.rule)}</p></div>
+  <div class="tiles3"><button class="btn" style="--c:var(--leaf)" data-act="conjPractice" data-arg="${p.k}"><span class="ico">🧩</span>S’exercer</button><button class="btn" style="--c:var(--mango)" data-act="conjQuiz" data-arg="${p.k}"><span class="ico">🏁</span>Quiz de la leçon</button></div></div>`; };
+AFTER.conjLesson = p => { const c=CONJ[p.k]; markLearned('V:'+c.id+':'+c.verbs[p.v||0]); };
+ACT.conjVerb = a => { CUR.params.v=+a; rerender(); ACT.conjAll(); };
+const conjSpoken = (c,v,i) => withPron(i, conjugate(v,c.tense)[i]).replace('’',"'");
+ACT.conjSay = a => { const p=CUR.params, c=CONJ[p.k], v=c.verbs[p.v||0]; say([conjSpoken(c,v,+a)]); };
+ACT.conjAll = () => { const p=CUR.params, c=CONJ[p.k], v=c.verbs[p.v||0]; const rows=$$('#ctab .conj-row'); say([0,1,2,3,4,5].flatMap(i=>[conjSpoken(c,v,i),250]), i=>{ rows.forEach(r=>r.classList.remove('lit')); if(i>=0&&i%2===0) rows[i/2]?.classList.add('lit'); }); };
+ACT.conjPractice = a => startConj(+a,'practice');
+ACT.conjQuiz = a => startConj(+a,'quiz');
+const CG = {
+ cForm(c){ const v=pick(c.verbs), i=Math.floor(Math.random()*6), forms=conjugate(v,c.tense), ans=forms[i];
+  const opts=shuffle([ans,...shuffle([...new Set(forms)].filter(f=>f!==ans)).slice(0,3)]);
+  return {key:`V:${c.id}:${v}:${i}`, prompt:`Conjugue « ${v} ».`, say:[`${TENSES[c.tense].when}. Conjugue le verbe ${v}.`], after:withPron(i,ans),
+   visual:`<div class="conj-q"><span class="when">${esc(TENSES[c.tense].when)}…</span><span class="read"><b>${esc(prShow(i,ans))}</b> <span class="blank">?</span> <span class="inf">(${esc(v)})</span></span></div>`,
+   kind:'choice', options:opts.map(f=>({v:f,html:esc(f),cls:'wordopt'})), answer:ans, cols:opts.some(o=>o.length>11)?1:2}; },
+ cPron(c){ for(let g=0;g<30;g++){ const v=pick(c.verbs), forms=conjugate(v,c.tense); const ok=[0,1,2,3,4,5].filter(i=>forms.filter(f=>f===forms[i]).length===1 && !(i===0&&/^[aeiouyéèêâh]/i.test(forms[i])));
+   if(!ok.length) continue; const i=pick(ok); const others=shuffle([0,1,2,3,4,5].filter(x=>x!==i&&forms[x]!==forms[i])).slice(0,3);
+   return {key:`V:${c.id}:${v}:${i}`, prompt:'Quel est le bon pronom ?', say:['Quel est le bon pronom ?'], after:withPron(i,forms[i]),
+    visual:`<div class="conj-q"><span class="read"><span class="blank">?</span> <b>${esc(forms[i])}</b></span></div>`, kind:'choice', options:shuffle([i,...others]).map(x=>({v:PRON[x],html:esc(PRON[x]),cls:'wordopt'})), answer:PRON[i]}; }
+  return CG.cForm(c); },
+ cEnding(c){ for(let g=0;g<30;g++){ const v=pick(c.verbs), forms=conjugate(v,c.tense), st=lcp(forms); if(st.length<2) continue; const ends=forms.map(f=>f.slice(st.length)); const i=Math.floor(Math.random()*6);
+   const opts=shuffle([ends[i],...shuffle([...new Set(ends)].filter(e=>e!==ends[i])).slice(0,3)]); const ans=forms[i];
+   return {key:`V:${c.id}:${v}:${i}`, prompt:'Quelle est la bonne terminaison ?', say:['Quelle est la bonne terminaison ?'], after:withPron(i,forms[i]),
+    visual:`<div class="conj-q"><span class="when">${esc(TENSES[c.tense].when)}…</span><span class="read"><b>${esc(prShow(i,ans))}</b> ${esc(st)}<span class="blank">?</span> <span class="inf">(${esc(v)})</span></span></div>`,
+    kind:'choice', options:opts.map(e=>({v:e,html:'-'+esc(e),cls:'wordopt'})), answer:ends[i]}; }
+  return CG.cForm(c); },
+ cVerb(c){ const v=pick(c.verbs), i=Math.floor(Math.random()*6), f=withPron(i,conjugate(v,c.tense)[i]); const all=[...new Set(CONJ.flatMap(x=>x.verbs))];
+  const opts=shuffle([v,...shuffle(all.filter(x=>x!==v)).slice(0,3)]);
+  return {key:`V:${c.id}:${v}:${i}`, prompt:'Quel est l’infinitif de ce verbe ?', say:['Quel est l’infinitif ?',300,f.replace('’',"'")], replay:[f.replace('’',"'")],
+   visual:`<div class="conj-q"><span class="read"><b>${esc(f)}</b></span></div>`, kind:'choice', options:opts.map(x=>({v:x,html:esc(x),cls:'wordopt'})), answer:v}; },
+ cAux(c){ const v=pick(c.verbs), i=Math.floor(Math.random()*6), f=conjugate(v,'pc')[i], sp=f.indexOf(' '), aux=f.slice(0,sp), pp=f.slice(sp+1); const ans=f;
+  const cand=[...new Set([conjugate('avoir','present')[i], conjugate('être','present')[i], conjugate('avoir','present')[(i+3)%6], conjugate('être','present')[(i+3)%6]])];
+  return {key:`V:${c.id}:${v}:${i}`, prompt:'Avoir ou être ?', say:['Hier. Choisis le bon auxiliaire.'], after:withPron(i,f),
+   visual:`<div class="conj-q"><span class="when">Hier…</span><span class="read"><b>${esc(prShow(i,ans))}</b> <span class="blank">?</span> <b class="end">${esc(pp)}</b> <span class="inf">(${esc(v)})</span></span></div>`,
+   kind:'choice', options:shuffle(cand).map(x=>({v:x,html:esc(x),cls:'wordopt'})), answer:aux}; },
+ cTime(c){ const pool=CONJ.filter(x=>['present','futur','imparfait','pc'].includes(x.tense)); const verbs=c.verbs.filter(v=>pool.every(()=>true)); const v=pick(verbs), i=Math.floor(Math.random()*6);
+  const ans=conjugate(v,c.tense)[i]; const opts=[...new Set(['present','futur','imparfait','pc'].map(t=>conjugate(v,t)[i]))];
+  return {key:`V:${c.id}:${v}:${i}`, prompt:'Choisis la bonne forme.', say:[`${TENSES[c.tense].when}. Choisis la bonne forme.`], after:withPron(i,ans),
+   visual:`<div class="conj-q"><span class="when big">${esc(TENSES[c.tense].when)},</span><span class="read"><b>${esc(prShow(i,ans))}</b> <span class="blank">?</span> <span class="inf">(${esc(v)})</span></span></div>`,
+   kind:'choice', options:shuffle(opts).map(x=>({v:x,html:esc(x),cls:'wordopt'})), answer:ans, cols:opts.some(o=>o.length>11)?1:2}; }
+};
+function startConj(k, mode){ const c=CONJ[k]; const n=mode==='quiz'?10:8; const qs=[]; let guard=0;
+ while(qs.length<n&&guard++<200){ const q=CG[pick(c.types)](c); if(qs.length&&qs[qs.length-1].key===q.key) continue; qs.push(q); }
+ SES={i:conjLevelIndex(), conj:k, mode, qs, k:0, score:0, first:true, done:false, res:[], build:[], sel:new Set()};
+ go('exercise',{}, ['exercise','result'].includes(CUR.name)); }
+function finishConj(){ const c=CONJ[SES.conj], st=conjState(c.id); const pct=Math.round(SES.score/SES.qs.length*100); let stars=0,passed=false,newly=false;
+ if(SES.mode==='quiz'){ st.attempts++; stars=pct>=95?3:pct>=85?2:pct>=S.threshold?1:0; passed=pct>=S.threshold; st.best=Math.max(st.best,pct); st.stars=Math.max(st.stars,stars); if(passed&&!st.passed){ st.passed=true; newly=true; } if(pct===100) award('perfect');
+  const lv=levelState('conjugaison'); const all=CONJ.map(x=>P.conj[x.id]||{}); lv.stars=Math.round(all.reduce((a,x)=>a+(x.stars||0),0)/CONJ.length); lv.best=Math.round(all.reduce((a,x)=>a+(x.best||0),0)/CONJ.length); lv.attempts=(lv.attempts||0)+1; if(all.every(x=>x.passed)) lv.passed=true; checkBadges(); }
+ saveProg(); SES.result={pct,stars,passed,newly}; go('result',{},true); }
+function conjResult(){ const r=SES.result, quiz=SES.mode==='quiz', c=CONJ[SES.conj], next=CONJ[SES.conj+1];
+ return `<div class="result fade-in"><div style="font-size:64px">${quiz?(r.passed?'🏆':'💪'):'🎉'}</div>
+  <h2 style="font-size:28px">${quiz?(r.passed?'Leçon réussie !':'Encore un petit effort !'):'Séance terminée !'}</h2><p class="muted">${esc(c.name)}</p>
+  <div class="big">${SES.score} / ${SES.qs.length}</div>${quiz?starsHtml(r.stars):''}
+  <p class="muted">${quiz?(r.passed?(next&&r.newly?`La leçon « ${esc(next.name)} » est ouverte !`:'Tu peux rejouer pour gagner plus d’étoiles.'):`Il faut ${S.threshold} % pour réussir. Tu as ${r.pct} %.`):`+${SES.score*10} points`}</p>
+  <div class="stack" style="width:100%;max-width:420px">
+   ${quiz&&r.passed&&next?`<button class="btn" style="--c:var(--mango)" data-act="conjOpen" data-arg="${SES.conj+1}">▶ Leçon suivante</button>`:''}
+   <button class="btn" style="--c:var(--leaf)" data-act="again">↻ Recommencer</button>
+   ${!quiz?`<button class="btn" style="--c:var(--mango)" data-act="conjQuiz" data-arg="${SES.conj}">🏁 Quiz de la leçon</button>`:''}
+   <button class="btn ghost" data-act="back">Retour à la leçon</button></div></div>`; }
+
 /* ----- Ma progression (enfant) ----- */
 SCREENS.progress = () => { const li=currentLevel(); const rev=Object.keys(P.review);
  return `${topbar('Ma progression')}<div class="stack fade-in">
@@ -1030,8 +1154,8 @@ SCREENS.progress = () => { const li=currentLevel(); const rev=Object.keys(P.revi
   ${rev.length?`<h2 class="section-title">À revoir</h2><div class="review-chips">${rev.slice(0,24).map(k=>`<button class="syl-chip" data-act="hearKey" data-arg="${esc(k)}">${esc(itemLabel(k))}</button>`).join('')}</div>`:''}
  </div>`; };
 function itemLabel(k){ const [t,v,x]=k.split(':'); const r=k.startsWith('R:'); if(r) return '🗣️ '+itemLabel(k.slice(2));
- if(t==='L'||t==='LW'||t==='LS') return v; if(t==='S') return wcase(v); if(t==='W') return wcase(v); if(t==='T') return '✍️ '+v; if(t==='P'){ const ph=C.phrases.find(p=>p.id===v); return ph?'📖 '+phraseText(ph).slice(0,18)+'…':v; } if(t==='D'){ const r=k.split(':'); const v2=r.slice(2).join(':'); if(r[1]==='P'){ const ph=C.phrases.find(p=>p.id===v2); return '✏️ '+(ph?phraseText(ph).slice(0,18)+'…':v2); } return '✏️ '+wcase(v2); } if(t==='X') return 'Voyelles'; if(t==='C') return 'Exercice'; return v||k; }
-ACT.hearKey = a => { const k=a.replace(/^R:/,''); const [t,v]=k.split(':'); const L=letterBy(v);
+ if(t==='L'||t==='LW'||t==='LS') return v; if(t==='S') return wcase(v); if(t==='W') return wcase(v); if(t==='T') return '✍️ '+v; if(t==='P'){ const ph=C.phrases.find(p=>p.id===v); return ph?'📖 '+phraseText(ph).slice(0,18)+'…':v; } if(t==='V'){ const c=CONJ.find(x=>x.id===v); const r=k.split(':'); return '🔤 '+(r[2]||'')+(r[3]!=null&&r[3]!==''?' · '+PRON[+r[3]]:'')+(c?' ('+TENSES[c.tense].name.toLowerCase()+')':''); } if(t==='D'){ const r=k.split(':'); const v2=r.slice(2).join(':'); if(r[1]==='P'){ const ph=C.phrases.find(p=>p.id===v2); return '✏️ '+(ph?phraseText(ph).slice(0,18)+'…':v2); } return '✏️ '+wcase(v2); } if(t==='X') return 'Voyelles'; if(t==='C') return 'Exercice'; return v||k; }
+ACT.hearKey = a => { const k=a.replace(/^R:/,''); const [t,v]=k.split(':'); if(t==='V'){ const r=k.split(':'); const c=CONJ.find(x=>x.id===r[1]); if(c&&r[3]!=null) return say([conjSpoken(c,r[2],+r[3])]); } const L=letterBy(v);
  if((t==='L'||t==='LW'||t==='LS'||t==='T')&&L) return say(letterSay(L)); if(t==='S') return say([A('S:'+v,syllSay(v[0],v.slice(1)))]); if(t==='W'){ const W=C.words.find(w=>w.w===v); if(W) return say([aWord(W)]); }
  if(t==='P'){ const ph=C.phrases.find(p=>p.id===v); if(ph) return say([phraseText(ph)]); } say([itemLabel(k)]); };
 
@@ -1111,7 +1235,7 @@ SCREENS.parent = p => { const pid=p.pid||S.profile; const pr=PROFILES.find(x=>x.
   <div class="card"><b>Temps d’apprentissage (7 derniers jours)</b>${weekChart(pg)}</div>
   <h2 class="section-title">Résultats par niveau</h2>
   <div class="tbl-wrap"><table><thead><tr><th>Niveau</th><th>Statut</th><th>Meilleur quiz</th><th>Étoiles</th><th>Essais quiz</th><th>Séances</th></tr></thead><tbody>
-   ${LEVELS.map((l,i)=>{ const st=pg.levels[l.id]||{}; return `<tr><td>${i+1}. ${esc(l.name)}</td><td>${st.passed?'✅ terminé':(S.unlockAll||i===0||pg.levels[LEVELS[i-1].id]?.passed)?'▶ en cours':'🔒'}</td><td>${st.best?st.best+' %':'—'}</td><td>${'⭐'.repeat(st.stars||0)||'—'}</td><td>${st.attempts||0}</td><td>${st.practice||0}</td></tr>`; }).join('')}</tbody></table></div>
+   ${LEVELS.map((l,i)=>{ const st=pg.levels[l.id]||{}; return `<tr><td>${i+1}. ${esc(l.name)}</td><td>${st.passed?'✅ terminé':(S.unlockAll||i===0||pg.levels[l.requires||LEVELS[i-1].id]?.passed)?'▶ en cours':'🔒'}</td><td>${st.best?st.best+' %':'—'}</td><td>${'⭐'.repeat(st.stars||0)||'—'}</td><td>${st.attempts||0}</td><td>${st.practice||0}</td></tr>`; }).join('')}</tbody></table></div>
   <h2 class="section-title">Difficultés rencontrées</h2>
   ${diff.length?`<div class="tbl-wrap"><table><thead><tr><th>Élément</th><th>Réussi</th><th>Erreurs</th><th>Dernière fois</th></tr></thead><tbody>${diff.map(([k,v])=>`<tr><td><b>${esc(itemLabel(k))}</b></td><td>${v.ok}</td><td style="color:var(--bad)">${v.ko}</td><td>${v.last?'✅':'❌'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Aucune difficulté enregistrée pour l’instant.</p>'}
   <h2 class="section-title">Exercices à revoir</h2>

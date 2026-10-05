@@ -67,6 +67,20 @@ Motivation : points, étoiles (1 à 3 par niveau), 15 badges, série de jours �
 - Les résultats vont dans l'espace parent (difficultés, à revoir).
 - **93 mots** en français (32 faciles, 32 moyens, 29 difficiles) et 14 phrases. Les mots ajoutés dans l'administration (avec leur niveau) entrent aussi dans la dictée.
 
+## Conjugaison (niveau 8, ouvert après le niveau 5 « Mots », en français)
+7 leçons qui s'ouvrent l'une après l'autre (quiz réussi à 70 %) :
+| Leçon | Temps | Verbes |
+|---|---|---|
+| 1 Être et avoir | présent | être, avoir |
+| 2 Les verbes en -er | présent | parler, chanter, danser, jouer, marcher, regarder, donner, aimer, écouter, manger, travailler, laver |
+| 3 Aller, faire, venir… | présent | aller, faire, dire, venir, voir, prendre |
+| 4 Pouvoir, vouloir, finir… | présent | pouvoir, vouloir, savoir, finir, boire, dormir, lire, écrire |
+| 5 Le futur | futur simple | être, avoir, aller, faire, parler, manger, finir, venir, pouvoir, voir |
+| 6 L'imparfait | imparfait | être, avoir, aller, faire, parler, manger, finir, jouer, dormir, venir |
+| 7 Le passé composé | passé composé | avoir, être, parler, manger, finir, faire, dire, voir, prendre, boire, lire, aller, venir, tomber |
+
+Chaque leçon : tableau de conjugaison (terminaisons en couleur, 🔊 sur chaque ligne, « Écouter tout »), règle à retenir, exercices et quiz : choisir la bonne forme, la bonne terminaison, le bon pronom, l'infinitif, avoir ou être (passé composé), la bonne forme selon le temps (Aujourd'hui / Demain / Avant / Hier). Après chaque bonne réponse, l'application lit la phrase entière (« nous mangeons »).
+
 ## Langues
 - **Français** (alphabet latin).
 - **Maninka en N’Ko (ߒߞߏ)** : 7 voyelles, ߒ et 20 consonnes, syllabes (familles ߓ ߕ ߘ ߞ ߟ ߡ), 12 mots, 4 petites phrases, écriture de droite à gauche, police Noto Sans NKo incluse. Changer de langue : bouton 🌍 sur l’accueil ou Paramètres. Chaque langue a sa propre progression.
