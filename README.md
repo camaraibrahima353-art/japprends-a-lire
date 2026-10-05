@@ -59,6 +59,12 @@ Motivation : points, étoiles (1 à 3 par niveau), 15 badges, série de jours �
 5. **ÉCRANS** — `SCREENS` + actions `ACT` (délégation d'événements, aucun framework).
 6. **SYNCHRO** — `Sync.push()` vers la table `learners` (voir `schema.sql`).
 
+## Langues
+- **Français** (alphabet latin).
+- **Maninka en N’Ko (ߒߞߏ)** : 7 voyelles, ߒ et 20 consonnes, syllabes (familles ߓ ߕ ߘ ߞ ߟ ߡ), 12 mots, 4 petites phrases, écriture de droite à gauche, police Noto Sans NKo incluse. Changer de langue : bouton 🌍 sur l’accueil ou Paramètres. Chaque langue a sa propre progression.
+  - Les mots sont écrits **sans signes de ton** : à faire vérifier par un maître N’Ko (modifiables dans Administration).
+  - Il n’existe pas de voix de synthèse maninka : en secours, le téléphone lit une transcription avec la voix française. **Enregistrez la vraie voix** dans Administration → 🎙 Voix (avec la langue N’Ko choisie) ; l’export crée `audio/emk-nkoo/`.
+
 ## Ajouter une langue
 Dupliquer `CONTENT_PACKS.fr` en `CONTENT_PACKS.ff` (par ex.), traduire lettres/mots/phrases, passer `ready:true` dans `LANGS`.
 

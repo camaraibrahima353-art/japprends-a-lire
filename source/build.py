@@ -13,6 +13,7 @@ ff=[]
 for w in (400,700):
     ff.append(f"@font-face{{font-family:'Andika';font-weight:{w};font-display:swap;src:url(fonts/andika-latin-{w}-normal.woff2) format('woff2');unicode-range:{LAT}}}")
     ff.append(f"@font-face{{font-family:'Andika';font-weight:{w};font-display:swap;src:url(fonts/andika-latin-ext-{w}-normal.woff2) format('woff2');unicode-range:{EXT}}}")
+ff.append("@font-face{font-family:'Noto Sans NKo';font-weight:400 700;font-display:swap;src:url(fonts/noto-sans-nko-nko-400-normal.woff2) format('woff2');unicode-range:U+07C0-07FF,U+200C-200F,U+25CC,U+2E1C-2E1D,U+FD3E-FD3F}")
 for w in (500,600,700,800):
     ff.append(f"@font-face{{font-family:'Baloo 2';font-weight:{w};font-display:swap;src:url(fonts/baloo-2-latin-{w}-normal.woff2) format('woff2')}}")
 head=f"""<!doctype html>
