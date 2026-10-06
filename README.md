@@ -81,6 +81,20 @@ Motivation : points, étoiles (1 à 3 par niveau), 15 badges, série de jours �
 
 Chaque leçon : tableau de conjugaison (terminaisons en couleur, 🔊 sur chaque ligne, « Écouter tout »), règle à retenir, exercices et quiz : choisir la bonne forme, la bonne terminaison, le bon pronom, l'infinitif, avoir ou être (passé composé), la bonne forme selon le temps (Aujourd'hui / Demain / Avant / Hier). Après chaque bonne réponse, l'application lit la phrase entière (« nous mangeons »).
 
+## Mathématiques (bouton 🔢 sur l'accueil)
+- **Les opérateurs** : + − × ÷ = < > avec leur nom, une explication, un dessin (mangues, ballons…) et 🔊 ; quiz « Quel signe ? » (trouver l'opération, comparer deux nombres, nommer un signe).
+- **Tables de multiplication de 0 à 100** (×0 à ×10) : tableau avec 🔊 et « Écouter la table », mode « Cacher les résultats » pour réciter, astuce pour chaque table, entraînement de 10 questions au pavé numérique, tables mélangées par dizaine (0–10, 11–20… 91–100), étoiles par table.
+- **Calculs, 12 niveaux** : additions et soustractions jusqu'à 10, 20, 100 (avec objets à compter au début), nombre manquant, multiplications, divisions exactes, petits problèmes (mangues, taxi, marché…), calculs mélangés, grands nombres. Le niveau suivant s'ouvre à 70 %.
+- **Calcul mental** : 60 secondes chrono (additions, soustractions, tables, mélangé) avec record.
+- Une erreur → « Essaie encore » ; deuxième erreur → la bonne réponse est affichée et lue. Résultats dans l'espace parent (tables réussies, niveaux, record).
+
+## Lire un texte (bouton 📷 sur l'accueil)
+- Prendre une photo d'une page (ou choisir une image) : le texte est reconnu **sur le téléphone, sans Internet** (Tesseract, français), puis lu à voix haute.
+- Lecture phrase par phrase, la phrase lue est surlignée et le mot prononcé aussi (si la voix du téléphone le permet) ; ⏮ ⏭, vitesse lente / normale / rapide, taille du texte A− / A+, toucher un mot pour l'entendre.
+- ✏️ Corriger le texte reconnu, 💾 le garder dans « Mes textes », ou ⌨️ écrire / coller un texte.
+- Le module de lecture de photos (≈ 4 Mo) se télécharge à la première utilisation, ou d'avance : Paramètres → « Préparer la lecture de photos hors ligne ».
+- Marche avec du texte imprimé. L'écriture à la main est mal reconnue.
+
 ## Langues
 - **Français** (alphabet latin).
 - **Maninka en N’Ko (ߒߞߏ)** : 7 voyelles, ߒ et 20 consonnes, syllabes (familles ߓ ߕ ߘ ߞ ߟ ߡ), 12 mots, 4 petites phrases, écriture de droite à gauche, police Noto Sans NKo incluse. Changer de langue : bouton 🌍 sur l’accueil ou Paramètres. Chaque langue a sa propre progression.

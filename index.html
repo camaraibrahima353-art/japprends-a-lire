@@ -210,6 +210,29 @@ h1,h2,h3{margin:0;text-wrap:balance;line-height:1.1}
 .conj-q{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
 .conj-q .read{font-size:clamp(26px,7.5vw,36px)}.conj-q .when{font-weight:800;color:var(--berry);font-size:18px}.conj-q .when.big{font-size:28px}
 .conj-q .blank{display:inline-block;min-width:2.2em;border-bottom:4px dashed var(--line-strong);color:var(--muted)}.conj-q .inf{color:var(--muted);font-size:.6em}
+.btn .sub{display:block;font-size:13px;font-weight:600;opacity:.92}
+.math-tiles .btn{min-height:120px}
+.objs{display:inline-flex;flex-wrap:wrap;gap:2px;max-width:9.5em;justify-content:center;vertical-align:middle}.objs i{font-style:normal}
+.objs.gone i{opacity:.3;text-decoration:line-through;filter:grayscale(1)}
+.groups{display:inline-flex;gap:6px}.objs.grp{border:2px dashed var(--line-strong);border-radius:10px;padding:2px 4px}
+.op-vis{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;font-size:26px}.op-vis b{font-size:30px;color:var(--ink)}
+.op-vis.small{font-size:30px}
+.op-head{display:flex;align-items:center;gap:12px}.op-sym{width:64px;height:64px;border-radius:16px;display:grid;place-items:center;color:#fff;font-size:40px;font-weight:800;flex:none}
+.table-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:10px}
+.tbl-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:16px;background:var(--card);border:2px solid var(--edge);box-shadow:0 3px 0 var(--edge)}
+.tbl-btn b{font-size:28px;font-variant-numeric:tabular-nums}.tbl-btn .stars{font-size:12px;letter-spacing:0}
+.mtable{display:flex;flex-direction:column;gap:5px;margin-block:10px}
+.mrow{display:grid;grid-template-columns:1fr auto 4em auto;gap:10px;align-items:center;padding:6px 12px;border-radius:12px;background:var(--paper);border:2px solid var(--edge);font-size:24px;font-variant-numeric:tabular-nums;text-align:left}
+.mrow b{color:var(--hibiscus);text-align:right}.mrow .spk{font-size:16px;opacity:.6}.mrow.lit{background:var(--hl);border-color:var(--sun)}
+.chrono{flex:1;display:flex;gap:8px;align-items:center}.chrono .meter{flex:1}
+.mexpr{text-align:center;font-size:clamp(44px,13vw,64px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:1px;padding-block:6px}
+.mexpr .ans{display:inline-block;min-width:1.4em;padding:0 .2em;border-bottom:5px solid var(--ink);color:var(--ink)}
+.mexpr .ans.good{color:var(--good);border-color:var(--good)}.mexpr .ans.bad{color:var(--bad);border-color:var(--bad)}
+.numpad{max-width:360px}.numpad button{height:64px;font-size:30px}.numpad button.ok{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+.story{display:flex;gap:12px;align-items:flex-start}
+.reader-text{line-height:1.7;overflow-wrap:anywhere}.rs{border-radius:8px;transition:background .2s}.rs.cur{background:color-mix(in srgb,var(--hl) 60%,transparent)}
+.rw{cursor:pointer;border-radius:6px}.rw.lit{background:var(--sun);color:#1D2142}
+.reader-bar{display:flex;gap:10px;align-items:center;position:sticky;bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--paper);padding:6px;border-radius:18px}
 .dict-slots{gap:6px}.dict-slots .slot{min-width:44px;height:58px;font-size:30px;padding:0 6px;border-radius:12px}
 .dict-slots.syl .slot{min-width:72px;height:66px;font-size:30px}.dict-slots.word .slot{min-width:64px;height:54px;font-size:22px}
 .slot.good{border-color:var(--good);background:var(--good-bg);color:var(--good)}.slot.bad{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
@@ -626,6 +649,8 @@ SCREENS.home = () => { const prof=PROFILES.find(p=>p.id===S.profile); const li=c
    <button class="btn" style="--c:var(--sky)" data-act="go" data-arg="levels"><span class="ico">📚</span>MES LEÇONS</button>
    <button class="btn" style="--c:var(--leaf)" data-act="go" data-arg="progress"><span class="ico">⭐</span>MA PROGRESSION</button>
    <button class="btn" style="--c:var(--grape)" data-act="go" data-arg="rewards"><span class="ico">🏆</span>MES RÉCOMPENSES</button>
+   <button class="btn" style="--c:var(--brick)" data-act="go" data-arg="math"><span class="ico">🔢</span>MATHÉMATIQUES</button>
+   <button class="btn" style="--c:var(--hibiscus)" data-act="go" data-arg="reader"><span class="ico">📷</span>LIRE UN TEXTE</button>
    <button class="btn" style="--c:var(--lagoon)" data-act="go" data-arg="settings"><span class="ico">⚙️</span>PARAMÈTRES</button>
   </div>
   ${INSTALL_EVT&&!isStandalone()?`<button class="btn ghost" data-act="install">📲 Installer l’application sur ce téléphone</button>`:''}
@@ -1139,6 +1164,256 @@ function conjResult(){ const r=SES.result, quiz=SES.mode==='quiz', c=CONJ[SES.co
    ${!quiz?`<button class="btn" style="--c:var(--mango)" data-act="conjQuiz" data-arg="${SES.conj}">🏁 Quiz de la leçon</button>`:''}
    <button class="btn ghost" data-act="back">Retour à la leçon</button></div></div>`; }
 
+/* ===================== MATHÉMATIQUES ===================== */
+const OPS = {
+ '+':{word:'L’addition', name:'plus', say:'plus', color:'var(--leaf)', desc:'On ajoute : on met ensemble.', ex:[2,3]},
+ '−':{word:'La soustraction', name:'moins', say:'moins', color:'var(--hibiscus)', desc:'On enlève : il en reste moins.', ex:[5,2]},
+ '×':{word:'La multiplication', name:'fois', say:'fois', color:'var(--sky)', desc:'On répète la même addition : 3 × 2 = 2 + 2 + 2.', ex:[3,2]},
+ '÷':{word:'La division', name:'divisé par', say:'divisé par', color:'var(--grape)', desc:'On partage en parts égales.', ex:[6,2]},
+ '=':{word:'Le signe égal', name:'égale', say:'égale', color:'var(--mango)', desc:'Les deux côtés ont la même valeur : 2 + 3 = 5.'},
+ '<':{word:'Plus petit que', name:'plus petit que', say:'est plus petit que', color:'var(--lagoon)', desc:'La pointe montre le plus petit nombre : 3 < 5.'},
+ '>':{word:'Plus grand que', name:'plus grand que', say:'est plus grand que', color:'var(--berry)', desc:'La bouche ouverte mange le plus grand nombre : 7 > 4.'}
+};
+const calcOp = (a,op,b) => op==='+'?a+b : op==='−'?a-b : op==='×'?a*b : a/b;
+const exprSay = (a,op,b,r) => `${a} ${OPS[op].say} ${b}` + (r!=null?` égale ${r}`:'');
+const rnd = (a,b) => a+Math.floor(Math.random()*(b-a+1));
+const objs = (n,e='🥭',cls='') => `<span class="objs ${cls}">${Array.from({length:n},()=>`<i>${e}</i>`).join('')}</span>`;
+const MATH_EMO = ['🥭','🍊','🍌','⚽','⭐','🐟','🥚','🍬'];
+function opVisual(op){ const e=pick(MATH_EMO);
+ if(op==='+') return `${objs(2,e)}<b>+</b>${objs(3,e)}<b>=</b>${objs(5,e)}`;
+ if(op==='−') return `${objs(3,e)}${objs(2,e,'gone')}<b>=</b>${objs(3,e)}`;
+ if(op==='×') return `<span class="groups">${[0,1,2].map(()=>objs(2,e,'grp')).join('')}</span><b>=</b>${objs(6,e)}`;
+ if(op==='÷') return `${objs(6,e)}<b>→</b><span class="groups">${objs(3,e,'grp')}${objs(3,e,'grp')}</span>`;
+ if(op==='=') return `${objs(2,e)}<b>+</b>${objs(3,e)}<b>=</b>${objs(5,e)}`;
+ if(op==='<') return `${objs(3,e)}<b>&lt;</b>${objs(5,e)}`;
+ return `${objs(7,e)}<b>&gt;</b>${objs(4,e)}`; }
+const NAMES = [['Aïssatou','f'],['Mamadou','m'],['Fatoumata','f'],['Sékou','m'],['Kadiatou','f'],['Alpha','m'],['Mariama','f'],['Lansana','m']];
+const STORIES = [
+ (a,b,[n,g])=>({t:`${n} a ${a} mangues. ${g==='f'?'Elle':'Il'} en achète ${b} de plus. Combien de mangues a-t-${g==='f'?'elle':'il'} ?`, r:a+b, e:'🥭', x:[a,'+',b]}),
+ (a,b,[n,g])=>({t:`${n} a ${a+b} bonbons. ${g==='f'?'Elle':'Il'} en donne ${b} à son frère. Combien lui en reste-t-il ?`, r:a, e:'🍬', x:[a+b,'−',b]}),
+ (a,b)=>({t:`Un taxi transporte ${a+b} passagers. ${b} descendent au marché. Combien reste-t-il de passagers ?`, r:a, e:'🚕', x:[a+b,'−',b]}),
+ (a,b)=>{ a=rnd(2,6); b=rnd(2,6); return {t:`Il y a ${a} tables dans la classe. Sur chaque table, il y a ${b} cahiers. Combien de cahiers en tout ?`, r:a*b, e:'📓', x:[a,'×',b]}; },
+ (a,b)=>{ b=rnd(2,5); const q=rnd(2,6); return {t:`Maman partage ${b*q} oranges entre ${b} enfants. Combien d’oranges reçoit chaque enfant ?`, r:q, e:'🍊', x:[b*q,'÷',b]}; },
+ (a,b,[n,g])=>({t:`${n} a ${a} poules et ${b} canards. Combien d’animaux a-t-${g==='f'?'elle':'il'} ?`, r:a+b, e:'🐔', x:[a,'+',b]}),
+ (a,b)=>{ const p=rnd(2,5), k=rnd(2,6); return {t:`Un cahier coûte ${p} pièces. Combien coûtent ${k} cahiers ?`, r:p*k, e:'🪙', x:[p,'×',k]}; }
+];
+const qOf = (a,op,b,extra={}) => Object.assign({a,op,b,answer:calcOp(a,op,b), text:`${a} ${op} ${b} = ?`, say:`Combien font ${exprSay(a,op,b)} ?`, done:exprSay(a,op,b,calcOp(a,op,b)), key:`M:${a}${op}${b}`}, extra);
+function genAdd(max){ const a=rnd(0,max), b=rnd(0,max-a); return qOf(a,'+',b); }
+function genSub(max){ const a=rnd(1,max), b=rnd(0,a); return qOf(a,'−',b); }
+function genMul(lo=1,hi=10){ return qOf(rnd(lo,hi),'×',rnd(0,10)); }
+function genDiv(){ const b=rnd(1,10), q=rnd(0,10); return qOf(b*q,'÷',b); }
+const MLEVELS = [
+ {id:'m1', name:'Additions jusqu’à 10', ico:'➕', gen:()=>{ const q=genAdd(10); q.vis=`${objs(q.a,'🥭')}<b>+</b>${objs(q.b,'🥭')}`; return q; }},
+ {id:'m2', name:'Soustractions jusqu’à 10', ico:'➖', gen:()=>{ const q=genSub(10); q.vis=`${objs(q.a-q.b,'🍊')}${objs(q.b,'🍊','gone')}`; return q; }},
+ {id:'m3', name:'Additions jusqu’à 20', ico:'➕', gen:()=>genAdd(20)},
+ {id:'m4', name:'Soustractions jusqu’à 20', ico:'➖', gen:()=>genSub(20)},
+ {id:'m5', name:'Le nombre manquant', ico:'❓', gen:()=>{ const add=Math.random()<.5; const a=rnd(1,10), b=rnd(1,10);
+   return add ? {answer:b, text:`${a} + ? = ${a+b}`, say:`${a} plus combien égale ${a+b} ?`, done:exprSay(a,'+',b,a+b), key:`M:${a}+?=${a+b}`}
+              : {answer:b, text:`${a+b} − ? = ${a}`, say:`${a+b} moins combien égale ${a} ?`, done:exprSay(a+b,'−',b,a), key:`M:${a+b}−?=${a}`}; }},
+ {id:'m6', name:'Additions jusqu’à 100', ico:'➕', gen:()=>genAdd(100)},
+ {id:'m7', name:'Soustractions jusqu’à 100', ico:'➖', gen:()=>genSub(100)},
+ {id:'m8', name:'Multiplications (tables 1 à 10)', ico:'✖️', gen:()=>genMul(1,10)},
+ {id:'m9', name:'Divisions (tables 1 à 10)', ico:'➗', gen:()=>genDiv()},
+ {id:'m10', name:'Petits problèmes', ico:'📖', gen:()=>{ const s=pick(STORIES)(rnd(2,9),rnd(1,8),pick(NAMES)); return {answer:s.r, story:s.t, text:'= ?', say:s.t, done:`${s.x[0]} ${OPS[s.x[1]].say} ${s.x[2]} égale ${s.r}`, key:`M:pb:${s.x.join('')}`, emo:s.e}; }},
+ {id:'m11', name:'Calculs mélangés', ico:'🧮', gen:()=>pick([()=>genAdd(100),()=>genSub(100),()=>genMul(2,10),()=>genDiv()])()},
+ {id:'m12', name:'Grands nombres', ico:'💯', gen:()=>pick([()=>{ const a=rnd(100,900),b=rnd(10,1000-a); return qOf(a,'+',b); },()=>{ const a=rnd(100,1000),b=rnd(10,a); return qOf(a,'−',b); },()=>qOf(rnd(11,99),'×',rnd(2,9))])()}
+];
+const M = () => (P.math = P.math || {levels:{}, tables:{}, chrono:{}, ops:{}});
+const mStars = pct => pct>=95?3:pct>=85?2:pct>=S.threshold?1:0;
+const mlUnlocked = k => S.unlockAll || k===0 || !!M().levels[MLEVELS[k-1].id]?.passed;
+
+SCREENS.math = () => { const m=M(); const tdone=Object.values(m.tables).filter(t=>t.stars>0).length, ldone=MLEVELS.filter(l=>m.levels[l.id]?.passed).length;
+ return `${topbar('Mathématiques')}<div class="stack fade-in">
+  <div class="lvl-head" style="background:var(--brick)"><span class="glyph" style="font-size:30px">1+2</span><div><h2 style="font-size:26px">Mathématiques</h2><div>Compter, calculer, apprendre ses tables.</div></div></div>
+  <div class="tiles3 math-tiles">
+   <button class="btn" style="--c:var(--leaf)" data-act="go" data-arg="mathOps"><span class="ico">➕</span>Les opérateurs<span class="sub">+ − × ÷ = &lt; &gt;</span></button>
+   <button class="btn" style="--c:var(--sky)" data-act="go" data-arg="mathTables"><span class="ico">✖️</span>Tables de multiplication<span class="sub">de 0 à 100 · ${tdone} réussies</span></button>
+   <button class="btn" style="--c:var(--mango)" data-act="go" data-arg="mathCalc"><span class="ico">🧮</span>Calculs<span class="sub">${ldone} / ${MLEVELS.length} niveaux</span></button>
+   <button class="btn" style="--c:var(--grape)" data-act="go" data-arg="mathChrono"><span class="ico">⏱️</span>Calcul mental<span class="sub">record : ${Math.max(0,...Object.values(m.chrono||{}).map(x=>x||0))}</span></button>
+  </div></div>`; };
+
+/* --- opérateurs --- */
+SCREENS.mathOps = () => `${topbar('Les opérateurs')}<div class="stack fade-in">
+ ${Object.entries(OPS).map(([op,o])=>`<div class="card op-card"><div class="op-head"><span class="op-sym" style="background:${o.color}">${esc(op)}</span><div class="grow"><b style="font-size:20px">${esc(o.word)}</b><div class="muted">se dit « ${esc(o.name)} »</div></div><button class="btn-icon" data-act="opSay" data-arg="${esc(op)}" aria-label="Écouter">🔊</button></div>
+  <p style="margin:8px 0">${esc(o.desc)}</p><div class="op-vis">${opVisual(op)}</div></div>`).join('')}
+ <button class="btn" style="--c:var(--mango)" data-act="opsQuiz">🧩 Quel signe ? (10 questions)</button></div>`;
+ACT.opSay = op => { const o=OPS[op]; const ex={'+':'2 plus 3 égale 5','−':'5 moins 2 égale 3','×':'3 fois 2 égale 6','÷':'6 divisé par 2 égale 3','=':'2 plus 3 égale 5','<':'3 est plus petit que 5','>':'7 est plus grand que 4'}[op]; say([o.word.replace('’',"'"),300,'se dit',o.name,500,ex]); };
+function genOpsQ(){ const t=Math.random();
+ if(t<.45){ for(let g=0;g<50;g++){ const op=pick(['+','−','×','÷']); let a=rnd(1,10), b=rnd(1,10); if(op==='−'&&b>a)[a,b]=[b,a]; if(op==='÷'){ a=a*b; } const r=calcOp(a,op,b);
+   const same=['+','−','×','÷'].filter(o=>{ const v=calcOp(a,o,b); return v===r; }); if(same.length>1) continue;
+   return {choice:true, text:`${a} ? ${b} = ${r}`, say:'Quel signe faut-il mettre ?', answer:op, options:['+','−','×','÷'], done:exprSay(a,op,b,r), key:`M:op:${a}${op}${b}`}; } }
+ if(t<.85){ const a=rnd(0,20), b=Math.random()<.2?a:rnd(0,20); const ans=a<b?'<':a>b?'>':'=';
+   return {choice:true, text:`${a} ? ${b}`, say:'Plus petit, plus grand ou égal ?', answer:ans, options:['<','=','>'], done:ans==='='?`${a} égale ${b}`:`${a} ${OPS[ans].say} ${b}`, key:`M:cmp:${a}${ans}${b}`}; }
+ const op=pick(Object.keys(OPS)); const opts=shuffle([op,...shuffle(Object.keys(OPS).filter(x=>x!==op)).slice(0,3)]);
+ return {choice:true, text:op, big:true, say:'Comment s’appelle ce signe ?', answer:OPS[op].name, options:opts.map(o=>OPS[o].name), done:`${op==='='?'égale':OPS[op].name}`, key:`M:sym:${op}`}; }
+ACT.opsQuiz = () => startMath({kind:'ops', title:'Quel signe ?', items:Array.from({length:10},genOpsQ)});
+
+/* --- tables --- */
+SCREENS.mathTables = p => { const r=p.r||0; const m=M();
+ return `${topbar('Tables de multiplication')}<div class="stack fade-in">
+  <div class="tabs">${Array.from({length:10},(_,k)=>`<button class="tab ${k===r?'on':''}" style="font-family:var(--f-display)" data-act="tabRange" data-arg="${k}">${k===0?'0–10':`${k*10+1}–${k*10+10}`}</button>`).join('')}</div>
+  <div class="table-grid">${(r===0?Array.from({length:11},(_,k)=>k):Array.from({length:10},(_,k)=>r*10+1+k)).map(n=>{ const st=m.tables[n]||{}; return `<button class="tbl-btn" data-act="openTable" data-arg="${n}"><b>${n}</b><span class="stars">${'⭐'.repeat(st.stars||0)||'<span class="off">⭐</span>'}</span></button>`; }).join('')}</div>
+  <button class="btn" style="--c:var(--mango)" data-act="tabMixed" data-arg="${r}">🎯 Tables mélangées (${r===0?'0 à 10':`${r*10+1} à ${r*10+10}`})</button>
+  <p class="note">Une table est réussie avec ${S.threshold} % de bonnes réponses. 3 étoiles à partir de 95 %.</p></div>`; };
+ACT.tabRange = a => { CUR.params.r=+a; rerender(); };
+ACT.openTable = a => go('mathTable',{n:+a, hide:false, shown:{}});
+ACT.tabMixed = a => { const r=+a; const ns=r===0?Array.from({length:11},(_,k)=>k):Array.from({length:10},(_,k)=>r*10+1+k);
+ startMath({kind:'mixed', title:'Tables mélangées', items:Array.from({length:10},()=>qOf(pick(ns),'×',rnd(0,10)))}); };
+SCREENS.mathTable = p => { const n=p.n; return `${topbar('Table de '+n, `<span class="chip">${'⭐'.repeat(M().tables[n]?.stars||0)||'☆'}</span>`)}<div class="stack fade-in">
+ <div class="card"><div class="row" style="justify-content:space-between"><b style="font-size:20px">Table de ${n}</b><button class="btn small ${p.hide?'':'ghost'}" style="--c:var(--grape)" data-act="tabHide">${p.hide?'👁 Montrer':'🙈 Cacher'} les résultats</button></div>
+  <div class="mtable" id="mtab">${Array.from({length:11},(_,k)=>{ const show=!p.hide||p.shown[k]; return `<button class="mrow" data-act="tabRow" data-arg="${k}"><span>${n} × ${k}</span><span>=</span><b>${show?n*k:'?'}</b><span class="spk">🔊</span></button>`; }).join('')}</div>
+  <button class="btn btn-listen small" data-act="tabAll">🔊 ÉCOUTER LA TABLE</button></div>
+ ${n>1&&n<=10?`<p class="note">💡 Astuce : ${n===2?'c’est le double.':n===5?'les résultats finissent par 0 ou 5.':n===9?'9 × k = 10 × k − k.':n===10?'on ajoute un 0.':n===4?'c’est le double du double.':'chaque ligne ajoute '+n+'.'}</p>`:n%10===0&&n>0?`<p class="note">💡 Astuce : ${n} × k = ${n/10} × k, puis on ajoute un 0.</p>`:n===0?'<p class="note">💡 Tout nombre multiplié par 0 donne 0.</p>':n===1?'<p class="note">💡 Multiplier par 1 ne change rien.</p>':n===100?'<p class="note">💡 On ajoute deux 0.</p>':n>10?`<p class="note">💡 Astuce : ${n} × k = ${Math.floor(n/10)*10} × k + ${n%10} × k.</p>`:''}
+ <div class="tiles3"><button class="btn" style="--c:var(--leaf)" data-act="tabPractice" data-arg="${n}"><span class="ico">🧩</span>S’entraîner</button></div>
+ <div class="pager"><button class="btn ghost small" data-act="tabNav" data-arg="-1" ${n===0?'disabled':''}>‹ Table de ${n-1}</button><button class="btn ghost small" data-act="tabNav" data-arg="1" ${n===100?'disabled':''}>Table de ${n+1} ›</button></div></div>`; };
+ACT.tabHide = () => { CUR.params.hide=!CUR.params.hide; CUR.params.shown={}; rerender(); };
+ACT.tabRow = a => { const p=CUR.params, k=+a; if(p.hide&&!p.shown[k]){ p.shown[k]=true; rerender(); } say([`${p.n} fois ${k} égale ${p.n*k}`]); };
+ACT.tabAll = () => { const n=CUR.params.n; const rows=$$('#mtab .mrow'); say(Array.from({length:11},(_,k)=>[`${n} fois ${k}, ${n*k}`,200]).flat(), i=>{ rows.forEach(r=>r.classList.remove('lit')); if(i>=0&&i%2===0) rows[i/2]?.classList.add('lit'); }); };
+ACT.tabNav = a => { CUR.params.n=Math.max(0,Math.min(100,CUR.params.n+ +a)); CUR.params.shown={}; render(true); };
+ACT.tabPractice = a => { const n=+a; const ks=shuffle(Array.from({length:11},(_,k)=>k)).slice(0,10); startMath({kind:'table', n, title:'Table de '+n, items:ks.map(k=>qOf(n,'×',k))}); };
+
+/* --- niveaux de calcul --- */
+SCREENS.mathCalc = () => { const m=M(); return `${topbar('Calculs')}<div class="stack fade-in"><div class="path">${MLEVELS.map((l,k)=>{ const st=m.levels[l.id]||{}; const un=mlUnlocked(k); return `<button class="lvl ${un?'':'locked'}" style="--c:var(--mango)" data-act="calcOpen" data-arg="${k}"><span class="glyph" style="font-size:32px">${l.ico}</span><span class="info"><span class="n">Niveau ${k+1}</span><br><span class="name" style="font-size:19px">${esc(l.name)}</span><br>${starsHtml(st.stars||0)}${st.best?` <span class="note">${st.best} %</span>`:''}</span><span class="status">${st.passed?'✅':un?'▶️':'🔒'}</span></button>`; }).join('')}</div>
+ <p class="note">${S.threshold} % de bonnes réponses ouvrent le niveau suivant.</p></div>`; };
+ACT.calcOpen = a => { const k=+a; if(!mlUnlocked(k)){ sfxBad(); toast(`🔒 Réussis d’abord le niveau ${k}.`); return; } const L=MLEVELS[k]; const items=[]; let g=0; while(items.length<10&&g++<100){ const q=L.gen(); if(!items.some(x=>x.key===q.key)) items.push(q); } startMath({kind:'level', lk:k, title:L.name, items}); };
+
+/* --- calcul mental chronométré --- */
+const CHRONO = [{id:'add',name:'Additions',gen:()=>genAdd(20)},{id:'sub',name:'Soustractions',gen:()=>genSub(20)},{id:'mul',name:'Tables (×)',gen:()=>genMul(1,10)},{id:'mix',name:'Mélangé',gen:()=>MLEVELS[10].gen()}];
+SCREENS.mathChrono = () => { const m=M(); return `${topbar('Calcul mental')}<div class="stack fade-in"><div class="card"><b style="font-size:20px">⏱️ 60 secondes</b><p style="margin:6px 0 0">Réponds au plus grand nombre de calculs avant la fin du temps.</p></div>
+ <div class="tiles3">${CHRONO.map(c=>`<button class="btn" style="--c:var(--grape)" data-act="chronoStart" data-arg="${c.id}"><span class="ico">⚡</span>${c.name}<span class="sub">record : ${m.chrono[c.id]||0}</span></button>`).join('')}</div></div>`; };
+ACT.chronoStart = a => { const c=CHRONO.find(x=>x.id===a); startMath({kind:'chrono', cid:a, title:'Calcul mental : '+c.name, gen:c.gen, items:[c.gen()], end:Date.now()+60000}); };
+
+/* --- moteur de questions de calcul (pavé numérique) --- */
+let MQ=null;
+function startMath(cfg){ MQ=Object.assign({k:0, score:0, res:[], input:'', tries:0, done:false, msg:''}, cfg); if(MQ.kind==='chrono'){ MQ.end=Date.now()+60000; } go('mq',{}, ['mq','mqEnd'].includes(CUR.name)); }
+SCREENS.mq = () => { const q=MQ.items[MQ.k]; const chrono=MQ.kind==='chrono';
+ const top = chrono ? `<div class="chrono"><div class="meter"><i id="ch-bar" style="width:${Math.max(0,(MQ.end-Date.now())/600)}%;background:var(--grape)"></i></div><span class="chip" id="ch-t">${Math.max(0,Math.ceil((MQ.end-Date.now())/1000))} s</span><span class="chip">✅ ${MQ.score}</span></div>`
+  : `<div class="dots">${MQ.items.map((_,j)=>`<i class="${j<MQ.k?(MQ.res[j]>=1?'done':'miss'):j===MQ.k?'cur':''}"></i>`).join('')}</div>`;
+ const shown = q.text.replace('?', `<span class="ans ${MQ.done?(MQ.ok?'good':'bad'):''}">${MQ.done?(q.choice?esc(q.answer):q.answer):(MQ.input===''?'?':esc(MQ.input))}</span>`);
+ return `<div class="ex-top"><button class="btn-icon" data-act="mqQuit" aria-label="Quitter">✕</button>${top}</div>
+ <div class="stack fade-in"><div class="prompt"><button class="btn-icon" data-act="mqSay" aria-label="Écouter">🔊</button><span>${esc(MQ.title)}</span></div>
+  ${q.story?`<div class="card story">${q.emo?`<span style="font-size:40px">${q.emo}</span>`:''}<p class="read" style="font-size:22px;margin:4px 0 0">${esc(q.story)}</p></div>`:''}
+  ${q.vis?`<div class="op-vis small">${q.vis}</div>`:''}
+  <div class="mexpr ${q.big?'sym':''}">${q.big&&!MQ.done?`<span style="font-size:1.6em">${esc(q.text)}</span>`:shown}</div>
+  <div class="feedback" id="fb">${MQ.msg||''}</div>
+  ${MQ.done&&!chrono?`<button class="btn" style="--c:var(--ink)" data-act="mqNext">${MQ.k<MQ.items.length-1?'Suivant ›':'Voir mon résultat'}</button>`:
+   q.choice?`<div class="options" style="grid-template-columns:repeat(${q.options.length>3?2:3},1fr)">${q.options.map(o=>`<button class="opt ${o.length>2?'wordopt':''}" data-act="mqChoice" data-arg="${esc(o)}">${esc(o)}</button>`).join('')}</div>`:
+   `<div class="keypad numpad">${[7,8,9,4,5,6,1,2,3,'⌫',0,'✓'].map(k=>`<button data-act="mqKey" data-arg="${k}" class="${k==='✓'?'ok':''}">${k}</button>`).join('')}</div>`}
+ </div>`; };
+AFTER.mq = () => { if(!MQ.spoken){ MQ.spoken=true; say([MQ.items[MQ.k].say]); } if(MQ.kind==='chrono') chronoTick(); };
+function chronoTick(){ clearTimeout(MQ._t); MQ._t=setTimeout(()=>{ if(!MQ||CUR.name!=='mq') return; const left=MQ.end-Date.now(); if(left<=0){ finishMath(); return; } const b=$('#ch-bar'), t=$('#ch-t'); if(b) b.style.width=(left/600)+'%'; if(t) t.textContent=Math.ceil(left/1000)+' s'; chronoTick(); },250); }
+ACT.mqSay = () => say([MQ.items[MQ.k].say]);
+ACT.mqQuit = () => confirmBox('Arrêter ?', ()=>{ clearTimeout(MQ&&MQ._t); MQ=null; back(); });
+ACT.mqKey = a => { if(MQ.done) return; if(a==='⌫'){ MQ.input=MQ.input.slice(0,-1); } else if(a==='✓'){ if(MQ.input!=='') mqCheck(MQ.input); return; } else if(MQ.input.length<6){ MQ.input+=a; } MQ.msg=''; rerender(); };
+ACT.mqChoice = a => { if(MQ.done) return; mqCheck(a); };
+function mqCheck(v){ const q=MQ.items[MQ.k]; const ok = q.choice ? v===q.answer : +v===q.answer; MQ.tries++;
+ if(ok){ const pts=MQ.tries===1?1:0.5; MQ.res[MQ.k]=pts; MQ.score+=MQ.kind==='chrono'?1:pts; record(q.key, MQ.tries===1); MQ.done=true; MQ.ok=true; sfxGood(); const m=pick(PRAISE); MQ.msg=`<span class="good">${m}</span>`; rerender(); say([m,200,q.done]);
+  setTimeout(()=>{ if(MQ&&CUR.name==='mq'&&MQ.items[MQ.k]===q) ACT.mqNext(); }, MQ.kind==='chrono'?500:1500); return; }
+ sfxBad();
+ if(MQ.tries===1 && MQ.kind!=='chrono'){ MQ.input=''; MQ.msg='<span class="bad">Essaie encore.</span>'; rerender(); $('.mexpr')?.classList.add('shake'); say(['Essaie encore.']); return; }
+ MQ.res[MQ.k]=0; record(q.key,false); MQ.done=true; MQ.ok=false; MQ.msg=`<span class="bad">La bonne réponse est ${esc(String(q.answer))}.</span>`; rerender(); say([q.done]);
+ if(MQ.kind==='chrono') setTimeout(()=>{ if(MQ&&CUR.name==='mq'&&MQ.items[MQ.k]===q) ACT.mqNext(); },1100); }
+ACT.mqNext = () => { if(!MQ) return; if(MQ.kind==='chrono'){ if(Date.now()>=MQ.end) return finishMath(); MQ.items.push(MQ.gen()); }
+ else if(MQ.k>=MQ.items.length-1) return finishMath();
+ MQ.k++; MQ.input=''; MQ.tries=0; MQ.done=false; MQ.msg=''; MQ.spoken=false; render(false); };
+function finishMath(){ clearTimeout(MQ._t); const m=M(); const n=MQ.kind==='chrono'?MQ.score:MQ.items.length; const pct=MQ.kind==='chrono'?100:Math.round(MQ.score/n*100); const stars=mStars(pct); MQ.pct=pct; MQ.stars=stars; MQ.newly=false;
+ if(MQ.kind==='table'){ const t=m.tables[MQ.n]||(m.tables[MQ.n]={best:0,stars:0}); t.best=Math.max(t.best,pct); t.stars=Math.max(t.stars,stars); }
+ if(MQ.kind==='level'){ const id=MLEVELS[MQ.lk].id; const st=m.levels[id]||(m.levels[id]={best:0,stars:0,passed:false}); st.best=Math.max(st.best,pct); st.stars=Math.max(st.stars,stars); if(pct>=S.threshold&&!st.passed){ st.passed=true; MQ.newly=true; } }
+ if(MQ.kind==='ops'){ m.ops.best=Math.max(m.ops.best||0,pct); }
+ if(MQ.kind==='chrono'){ MQ.record = MQ.score>(m.chrono[MQ.cid]||0); m.chrono[MQ.cid]=Math.max(m.chrono[MQ.cid]||0,MQ.score); }
+ if(pct===100&&MQ.kind!=='chrono') award('perfect'); saveProg(); go('mqEnd',{},true); }
+SCREENS.mqEnd = () => { const chrono=MQ.kind==='chrono'; const next = MQ.kind==='level' && MQ.pct>=S.threshold && MLEVELS[MQ.lk+1];
+ return `<div class="result fade-in"><div style="font-size:60px">${chrono?(MQ.record?'🏆':'⏱️'):MQ.pct>=S.threshold?'🏆':'💪'}</div>
+ <h2 style="font-size:28px">${chrono?(MQ.record?'Nouveau record !':'Temps écoulé !'):MQ.pct>=S.threshold?'Bravo !':'Encore un petit effort !'}</h2><p class="muted">${esc(MQ.title)}</p>
+ <div class="big">${chrono?MQ.score+' bonnes réponses':(Math.round(MQ.score*10)/10)+' / '+MQ.items.length}</div>${chrono?'':starsHtml(MQ.stars)}
+ ${MQ.newly&&next?`<p class="muted">Le niveau « ${esc(next.name)} » est ouvert !</p>`:''}
+ <div class="review-chips" style="justify-content:center">${MQ.items.slice(0, chrono?MQ.items.length-(MQ.done?0:1):MQ.items.length).map((q,j)=>`<span class="syl-chip" style="font-size:16px;color:${MQ.res[j]>=1?'var(--good)':'var(--bad)'}">${MQ.res[j]>=1?'✅':MQ.res[j]>0?'🟡':'❌'} ${esc(q.story?q.done:q.text.replace('?',String(q.answer)))}</span>`).join('')}</div>
+ <div class="stack" style="width:100%;max-width:420px">
+  ${next?`<button class="btn" style="--c:var(--mango)" data-act="calcOpen" data-arg="${MQ.lk+1}">▶ Niveau suivant</button>`:''}
+  <button class="btn" style="--c:var(--leaf)" data-act="mqAgain">↻ Recommencer</button><button class="btn ghost" data-act="back">Retour</button></div></div>`; };
+AFTER.mqEnd = () => { if(MQ.pct>=S.threshold&&MQ.kind!=='chrono'||MQ.record){ sfxWin(); confetti(); } say([MQ.kind==='chrono'?`${MQ.score} bonnes réponses !`:MQ.pct>=S.threshold?'Bravo !':'Encore un petit effort, tu vas y arriver !']); };
+ACT.mqAgain = () => { const k=MQ.kind; if(k==='level') return ACT.calcOpen(String(MQ.lk)); if(k==='table') return ACT.tabPractice(String(MQ.n)); if(k==='ops') return ACT.opsQuiz(); if(k==='chrono') return ACT.chronoStart(MQ.cid); startMath({kind:'mixed', title:MQ.title, items:shuffle(MQ.items.map(q=>qOf(q.a,'×',rnd(0,10))))}); };
+
+/* ===================== LIRE UN TEXTE (photo → texte → lecture à voix haute) ===================== */
+const SAMPLE_TEXT = {title:'Exemple : le marché', text:'Le samedi, Aïssatou va au marché avec sa maman. Elles achètent des mangues, des tomates et du riz. Le marchand sourit et donne une banane à Aïssatou. Sur le chemin du retour, elles saluent les voisins.'};
+let RD = {text:'', title:'', s:0, playing:false, rate:0.85, size:26, edit:false, ocr:null};
+const loadTexts = () => Store.get('jal.texts',[]);
+const saveTexts = t => Store.set('jal.texts',t);
+function splitSentences(text){ return (text.match(/[^.!?…\n]+[.!?…]*[»"”]?|\n+/g)||[]).map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean); }
+function cleanOcr(t){ return t.replace(/-\n(\w)/g,'$1').replace(/[ \t]+\n/g,'\n').replace(/([^\n])\n(?!\n)/g,'$1 ').replace(/\n{2,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').replace(/[|_~]/g,'').trim(); }
+SCREENS.reader = () => { const texts=loadTexts();
+ if(RD.ocr) return `${topbar('Lire un texte','<span></span>')}<div class="stack fade-in" style="align-items:center;text-align:center">
+   ${RD.ocr.img?`<img src="${RD.ocr.img}" alt="Photo du texte" style="max-height:260px;border-radius:14px;border:2px solid var(--edge)">`:''}
+   <b style="font-size:20px">Je lis la photo…</b><div class="meter" style="width:100%"><i id="ocr-bar" style="width:${Math.round((RD.ocr.p||0)*100)}%"></i></div><p class="note" id="ocr-st">${esc(RD.ocr.st||'Préparation…')}</p>
+   <p class="note">La première fois, l’application prépare la lecture des photos (environ 4 Mo), ensuite tout marche sans Internet.</p></div>`;
+ if(RD.edit) return `${topbar('Corriger le texte','<span></span>')}<div class="stack fade-in"><p class="note">Corrige les erreurs de lecture de la photo si besoin.</p>
+   <label class="field" for="rd-title">Titre<input type="text" id="rd-title" value="${esc(RD.title)}"></label>
+   <textarea id="rd-text" class="read" style="font-family:var(--f-read);font-size:19px;min-height:260px">${esc(RD.text)}</textarea>
+   <div class="row"><button class="btn grow" style="--c:var(--leaf)" data-act="rdEditDone">✓ Terminé</button><button class="btn ghost grow" data-act="rdClose">Annuler</button></div></div>`;
+ if(!RD.text) return `${topbar('Lire un texte')}<div class="stack fade-in">
+   <div class="card stack"><b style="font-size:20px">📷 Photographie un texte</b><p style="margin:0">Prends en photo une page de livre ou un cahier : l’application trouve le texte et te le lit à voix haute.</p>
+    <label class="btn" style="--c:var(--hibiscus)">📷 Prendre une photo<input type="file" accept="image/*" capture="environment" data-ocr="1" hidden></label>
+    <label class="btn" style="--c:var(--sky)">🖼 Choisir une image<input type="file" accept="image/*" data-ocr="1" hidden></label>
+    <p class="note">Conseils : page bien à plat, bonne lumière, texte imprimé (pas écrit à la main), un seul paragraphe à la fois.</p></div>
+   <div class="row"><button class="btn ghost grow" data-act="rdType">⌨️ Écrire ou coller un texte</button><button class="btn ghost grow" data-act="rdSample">📄 Texte d’exemple</button></div>
+   ${texts.length?`<h2 class="section-title">Mes textes</h2><div class="list">${texts.map(t=>`<div class="li"><button class="grow" style="text-align:left" data-act="rdOpen" data-arg="${t.id}"><b>${esc(t.title)}</b><br><span class="note">${esc(t.date)} · ${t.text.split(/\s+/).length} mots</span></button><button class="btn-icon" style="width:40px;height:40px;font-size:16px" data-act="rdDel" data-arg="${t.id}" aria-label="Supprimer">🗑</button></div>`).join('')}</div>`:''}</div>`;
+ const sents=splitSentences(RD.text);
+ return `${topbar(esc(RD.title||'Mon texte'))}<div class="stack fade-in">
+  <div class="card reader-text read" id="rd" style="font-size:${RD.size}px">${sents.map((s,i)=>s.startsWith('\n')?'<br><br>':`<span class="rs ${i===RD.s&&RD.playing?'cur':''}" data-i="${i}">${s.split(/(\s+)/).map((w,j)=>/\s/.test(w)||!w?w:`<span class="rw" data-act="rdWord" data-arg="${esc(w)}">${esc(w)}</span>`).join('')}</span> `).join('')}</div>
+  <div class="reader-bar">
+   <button class="btn-icon" data-act="rdPrev" aria-label="Phrase précédente">⏮</button>
+   <button class="btn" style="--c:var(--ink);flex:1" data-act="rdPlay">${RD.playing?'⏸ Pause':'▶ Lire'}</button>
+   <button class="btn-icon" data-act="rdNextS" aria-label="Phrase suivante">⏭</button></div>
+  <div class="row" style="justify-content:space-between"><div class="seg">${[[0.65,'🐢 Lent'],[0.85,'Normal'],[1,'Rapide']].map(([v,l])=>`<button class="${RD.rate===v?'on':''}" data-act="rdRate" data-arg="${v}">${l}</button>`).join('')}</div>
+   <div class="seg"><button data-act="rdSize" data-arg="-2" aria-label="Plus petit">A−</button><button data-act="rdSize" data-arg="2" aria-label="Plus grand">A+</button></div></div>
+  <p class="note">Touche un mot pour l’entendre. Phrase ${Math.min(RD.s+1,sents.filter(s=>!s.startsWith('\n')).length)} / ${sents.filter(s=>!s.startsWith('\n')).length}.</p>
+  <div class="row"><button class="btn ghost small grow" data-act="rdEdit">✏️ Corriger</button>${RD.id?'':`<button class="btn small grow" style="--c:var(--leaf)" data-act="rdSave">💾 Garder</button>`}<button class="btn ghost small grow" data-act="rdClose">📷 Nouveau texte</button></div></div>`; };
+function rdSentences(){ return splitSentences(RD.text); }
+function rdMark(){ $$('#rd .rs').forEach(e=>e.classList.toggle('cur', +e.dataset.i===RD.s && RD.playing)); $$('#rd .rw.lit').forEach(e=>e.classList.remove('lit')); }
+function rdSpeak(i){ const ss=rdSentences(); while(i<ss.length && ss[i].startsWith('\n')) i++; if(i>=ss.length){ RD.playing=false; RD.s=0; rerender(); return; }
+ RD.s=i; rdMark(); stopSpeech(); const tok=speakTok; if(!hasTTS){ toast('Pas de voix sur cet appareil.'); RD.playing=false; rerender(); return; }
+ const sentence=ss[i]; const u=new SpeechSynthesisUtterance(sentence); u.lang='fr-FR'; if(VOICE) u.voice=VOICE; u.rate=RD.rate;
+ const el=$(`#rd .rs[data-i="${i}"]`); const words=el?$$('.rw',el):[]; const offs=[]; let pos=0; words.forEach(w=>{ const ix=sentence.indexOf(w.textContent,pos); offs.push(ix); pos=ix+w.textContent.length; });
+ u.onboundary = e => { if(tok!==speakTok) return; let k=-1; offs.forEach((o,j)=>{ if(o<=e.charIndex) k=j; }); words.forEach(w=>w.classList.remove('lit')); if(k>=0) words[k].classList.add('lit'); };
+ u.onend = () => { if(tok!==speakTok||!RD.playing||CUR.name!=='reader') return; setTimeout(()=>{ if(tok===speakTok&&RD.playing) rdSpeak(i+1); },250); };
+ el&&el.scrollIntoView({block:'center',behavior:'smooth'});
+ setTimeout(()=>{ if(tok===speakTok) speechSynthesis.speak(u); },60); }
+ACT.rdPlay = () => { if(RD.playing){ RD.playing=false; stopSpeech(); rerender(); return; } RD.playing=true; rerender(); rdSpeak(RD.s); };
+ACT.rdPrev = () => { RD.s=Math.max(0,RD.s-1); while(RD.s>0&&rdSentences()[RD.s]?.startsWith('\n')) RD.s--; RD.playing=true; rerender(); rdSpeak(RD.s); };
+ACT.rdNextS = () => { RD.playing=true; rerender(); rdSpeak(RD.s+1); };
+ACT.rdWord = a => { RD.playing=false; stopSpeech(); rerender(); say([a.replace(/[.,!?;:«»"“”()]/g,'')]); };
+ACT.rdRate = a => { RD.rate=+a; rerender(); if(RD.playing) rdSpeak(RD.s); };
+ACT.rdSize = a => { RD.size=Math.max(18,Math.min(44,RD.size+ +a)); rerender(); };
+ACT.rdType = () => { Object.assign(RD,{text:' ',title:'Mon texte',s:0,id:null,edit:true}); rerender(); RD.text=''; setTimeout(()=>$('#rd-text')?.focus(),50); };
+ACT.rdSample = () => { Object.assign(RD,{text:SAMPLE_TEXT.text,title:SAMPLE_TEXT.title,s:0,id:null,edit:false,playing:false}); rerender(); };
+ACT.rdEdit = () => { RD.playing=false; stopSpeech(); RD.edit=true; rerender(); };
+ACT.rdEditDone = () => { const t=$('#rd-text').value.trim(); RD.title=$('#rd-title').value.trim()||t.split(/\s+/).slice(0,4).join(' ')||'Mon texte'; RD.edit=false; RD.text=t; RD.s=0;
+ if(RD.id){ const ts=loadTexts(); const x=ts.find(z=>z.id===RD.id); if(x){ x.text=t; x.title=RD.title; saveTexts(ts); } } rerender(); };
+ACT.rdClose = () => { RD.playing=false; stopSpeech(); Object.assign(RD,{text:'',title:'',s:0,id:null,edit:false}); rerender(); };
+ACT.rdSave = () => { const ts=loadTexts(); const id=uid(); ts.unshift({id,title:RD.title||'Mon texte',text:RD.text,date:today()}); if(!saveTexts(ts.slice(0,40))){ toast('Mémoire pleine.'); return; } RD.id=id; toast('Texte gardé dans « Mes textes ».'); rerender(); };
+ACT.rdOpen = a => { const t=loadTexts().find(x=>x.id===a); if(t) Object.assign(RD,{text:t.text,title:t.title,s:0,id:t.id,edit:false,playing:false}); rerender(); };
+ACT.rdDel = a => confirmBox('Supprimer ce texte ?', ()=>{ saveTexts(loadTexts().filter(x=>x.id!==a)); rerender(); });
+// Reconnaissance de texte (Tesseract, entièrement sur le téléphone)
+let OCR_WORKER=null;
+const absUrl = p => new URL(p, location.href).href;
+async function getOcr(onProg){ if(OCR_WORKER) return OCR_WORKER;
+ await loadScript('lib/ocr/tesseract.min.js'); if(!window.Tesseract) throw new Error('module absent');
+ OCR_WORKER = await Tesseract.createWorker('fra', 1, { workerPath:absUrl('lib/ocr/worker.min.js'), corePath:absUrl('lib/ocr/core'), langPath:absUrl('lib/ocr/lang'), gzip:true, logger:m=>onProg&&onProg(m) });
+ return OCR_WORKER; }
+async function prepImage(file){ let bmp; try{ bmp=await createImageBitmap(file,{imageOrientation:'from-image'}); }catch(e){ bmp=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=URL.createObjectURL(file); }); }
+ const max=2000, sc=Math.min(1,max/Math.max(bmp.width,bmp.height)); const c=document.createElement('canvas'); c.width=Math.round(bmp.width*sc); c.height=Math.round(bmp.height*sc);
+ const x=c.getContext('2d'); x.filter='grayscale(1) contrast(1.35)'; x.drawImage(bmp,0,0,c.width,c.height); return c; }
+async function runOcr(file){ RD.ocr={p:0,st:'Préparation de la photo…'}; rerender();
+ try{ const canvas=await prepImage(file); RD.ocr.img=canvas.toDataURL('image/jpeg',.6); rerender();
+  const label={ 'loading tesseract core':'Chargement du lecteur…', 'initializing tesseract':'Démarrage…', 'loading language traineddata':'Chargement du français…', 'initializing api':'Démarrage…', 'recognizing text':'Je lis les mots…' };
+  const w=await getOcr(m=>{ if(!RD.ocr) return; RD.ocr.st=label[m.status]||m.status; RD.ocr.p=m.status==='recognizing text'?m.progress:Math.min(.15,(m.progress||0)*.15); const b=$('#ocr-bar'), s=$('#ocr-st'); if(b) b.style.width=Math.round(RD.ocr.p*100)+'%'; if(s) s.textContent=RD.ocr.st; });
+  const { data } = await w.recognize(canvas); const text=cleanOcr(data.text||'');
+  RD.ocr=null; if(text.replace(/\W/g,'').length<3){ toast('Je n’ai pas trouvé de texte. Reprends la photo plus près, avec plus de lumière.',4000); rerender(); return; }
+  Object.assign(RD,{text, title:text.split(/\s+/).slice(0,4).join(' '), s:0, id:null, edit:false, playing:false}); rerender(); sfxGood(); toast(data.confidence<60?'Texte trouvé. Vérifie-le avec « Corriger ».':'Texte trouvé ! Touche ▶ Lire.',3500); }
+ catch(e){ RD.ocr=null; rerender(); toast(window.JAL_PWA?'La lecture de la photo a échoué. Réessaie avec Internet la première fois.':'La lecture de photos marche dans l’application installée. Ici, utilise « Écrire ou coller un texte ».',4500); } }
+ACT.ocrPrefetch = async () => { const files=['lib/ocr/tesseract.min.js','lib/ocr/worker.min.js','lib/ocr/core/tesseract-core-simd-lstm.wasm.js','lib/ocr/core/tesseract-core-lstm.wasm.js','lib/ocr/lang/fra.traineddata.gz'];
+ toast('Téléchargement du lecteur de photos…',6000); try{ for(const f of files){ const r=await fetch(f); if(!r.ok) throw 0; await r.arrayBuffer(); } toast('✅ La lecture de photos marche maintenant sans Internet.',4000); }catch(e){ toast('Téléchargement impossible. Vérifiez Internet.'); } };
+
 /* ----- Ma progression (enfant) ----- */
 SCREENS.progress = () => { const li=currentLevel(); const rev=Object.keys(P.review);
  return `${topbar('Ma progression')}<div class="stack fade-in">
@@ -1154,7 +1429,7 @@ SCREENS.progress = () => { const li=currentLevel(); const rev=Object.keys(P.revi
   ${rev.length?`<h2 class="section-title">À revoir</h2><div class="review-chips">${rev.slice(0,24).map(k=>`<button class="syl-chip" data-act="hearKey" data-arg="${esc(k)}">${esc(itemLabel(k))}</button>`).join('')}</div>`:''}
  </div>`; };
 function itemLabel(k){ const [t,v,x]=k.split(':'); const r=k.startsWith('R:'); if(r) return '🗣️ '+itemLabel(k.slice(2));
- if(t==='L'||t==='LW'||t==='LS') return v; if(t==='S') return wcase(v); if(t==='W') return wcase(v); if(t==='T') return '✍️ '+v; if(t==='P'){ const ph=C.phrases.find(p=>p.id===v); return ph?'📖 '+phraseText(ph).slice(0,18)+'…':v; } if(t==='V'){ const c=CONJ.find(x=>x.id===v); const r=k.split(':'); return '🔤 '+(r[2]||'')+(r[3]!=null&&r[3]!==''?' · '+PRON[+r[3]]:'')+(c?' ('+TENSES[c.tense].name.toLowerCase()+')':''); } if(t==='D'){ const r=k.split(':'); const v2=r.slice(2).join(':'); if(r[1]==='P'){ const ph=C.phrases.find(p=>p.id===v2); return '✏️ '+(ph?phraseText(ph).slice(0,18)+'…':v2); } return '✏️ '+wcase(v2); } if(t==='X') return 'Voyelles'; if(t==='C') return 'Exercice'; return v||k; }
+ if(t==='L'||t==='LW'||t==='LS') return v; if(t==='S') return wcase(v); if(t==='W') return wcase(v); if(t==='T') return '✍️ '+v; if(t==='P'){ const ph=C.phrases.find(p=>p.id===v); return ph?'📖 '+phraseText(ph).slice(0,18)+'…':v; } if(t==='M') return '🔢 '+k.slice(2).replace(/^(op|cmp|sym|pb):/,''); if(t==='V'){ const c=CONJ.find(x=>x.id===v); const r=k.split(':'); return '🔤 '+(r[2]||'')+(r[3]!=null&&r[3]!==''?' · '+PRON[+r[3]]:'')+(c?' ('+TENSES[c.tense].name.toLowerCase()+')':''); } if(t==='D'){ const r=k.split(':'); const v2=r.slice(2).join(':'); if(r[1]==='P'){ const ph=C.phrases.find(p=>p.id===v2); return '✏️ '+(ph?phraseText(ph).slice(0,18)+'…':v2); } return '✏️ '+wcase(v2); } if(t==='X') return 'Voyelles'; if(t==='C') return 'Exercice'; return v||k; }
 ACT.hearKey = a => { const k=a.replace(/^R:/,''); const [t,v]=k.split(':'); if(t==='V'){ const r=k.split(':'); const c=CONJ.find(x=>x.id===r[1]); if(c&&r[3]!=null) return say([conjSpoken(c,r[2],+r[3])]); } const L=letterBy(v);
  if((t==='L'||t==='LW'||t==='LS'||t==='T')&&L) return say(letterSay(L)); if(t==='S') return say([A('S:'+v,syllSay(v[0],v.slice(1)))]); if(t==='W'){ const W=C.words.find(w=>w.w===v); if(W) return say([aWord(W)]); }
  if(t==='P'){ const ph=C.phrases.find(p=>p.id===v); if(ph) return say([phraseText(ph)]); } say([itemLabel(k)]); };
@@ -1189,6 +1464,7 @@ SCREENS.settings = () => `${topbar('Paramètres')}<div class="stack fade-in">
  <div class="card stack"><b>Voix</b><p class="note">${!hasTTS?'La synthèse vocale n’est pas disponible sur cet appareil. Ajoutez des fichiers audio dans l’administration.':VOICE?`Voix utilisée : ${esc(VOICE.name)}`:'Aucune voix française trouvée. Sur Android : Paramètres → Synthèse vocale → installez la voix « Français » (elle fonctionne ensuite sans Internet).'}</p><button class="btn btn-listen small" data-act="testVoice">🔊 Tester la voix</button></div>
  <div class="card stack" id="offline-box"><b>Hors ligne</b><p class="note">…</p></div>
  ${isStandalone()?'':`<button class="btn" style="--c:var(--ink)" data-act="install">📲 Installer l’application</button>`}
+ ${window.JAL_PWA?`<button class="btn ghost" data-act="ocrPrefetch">📷 Préparer la lecture de photos hors ligne (4 Mo)</button>`:''}
  <button class="btn ghost" data-act="go" data-arg="profiles">👤 Changer d’apprenant</button>
  <button class="btn" style="--c:var(--grape)" data-act="pin" data-arg="parent">👪 Espace parent / enseignant</button>
  <button class="btn ghost" data-act="pin" data-arg="admin">🛠 Administration</button></div>`;
@@ -1233,6 +1509,9 @@ SCREENS.parent = p => { const pid=p.pid||S.profile; const pr=PROFILES.find(x=>x.
    <div class="stat"><b>${Object.keys(pg.learned).filter(k=>k.startsWith('L:')).length} / ${letters().length}</b><span>lettres vues</span></div>
    <div class="stat"><b>${Object.keys(pg.review).length}</b><span>exercices à revoir</span></div></div>
   <div class="card"><b>Temps d’apprentissage (7 derniers jours)</b>${weekChart(pg)}</div>
+  ${(()=>{ const mm=pg.math||{levels:{},tables:{},chrono:{}}; const tb=Object.entries(mm.tables||{}).filter(([n,t])=>t.stars>0).map(([n])=>+n).sort((a,b)=>a-b); return `<div class="card stack"><b>🔢 Mathématiques</b>
+   <div class="stats"><div class="stat"><b>${tb.length} / 101</b><span>tables réussies</span></div><div class="stat"><b>${MLEVELS.filter(l=>mm.levels?.[l.id]?.passed).length} / ${MLEVELS.length}</b><span>niveaux de calcul</span></div><div class="stat"><b>${Math.max(0,...Object.values(mm.chrono||{}).map(x=>x||0))}</b><span>record calcul mental (60 s)</span></div></div>
+   ${tb.length?`<p class="note">Tables réussies : ${tb.join(', ')}</p>`:''}</div>`; })()}
   <h2 class="section-title">Résultats par niveau</h2>
   <div class="tbl-wrap"><table><thead><tr><th>Niveau</th><th>Statut</th><th>Meilleur quiz</th><th>Étoiles</th><th>Essais quiz</th><th>Séances</th></tr></thead><tbody>
    ${LEVELS.map((l,i)=>{ const st=pg.levels[l.id]||{}; return `<tr><td>${i+1}. ${esc(l.name)}</td><td>${st.passed?'✅ terminé':(S.unlockAll||i===0||pg.levels[l.requires||LEVELS[i-1].id]?.passed)?'▶ en cours':'🔒'}</td><td>${st.best?st.best+' %':'—'}</td><td>${'⭐'.repeat(st.stars||0)||'—'}</td><td>${st.attempts||0}</td><td>${st.practice||0}</td></tr>`; }).join('')}</tbody></table></div>
@@ -1413,6 +1692,7 @@ ACT.syncPush = async () => { S.sync={url:$('#sb-url').value.trim(),key:$('#sb-ke
 /* ---------- événements globaux ---------- */
 document.addEventListener('click', e => { const el=e.target.closest('[data-act]'); if(!el||el.disabled) return; const fn=ACT[el.dataset.act]; if(fn){ e.preventDefault(); fn(el.dataset.arg, el, e); } });
 document.addEventListener('change', e => { const el=e.target;
+ if(el.dataset.ocr){ const f=el.files&&el.files[0]; el.value=''; if(f) runOcr(f); return; }
  if(el.dataset.actChange){ const [n,arg]=el.dataset.actChange.split(':'); CHANGE[n]&&CHANGE[n](el,arg); return; }
  if(el.dataset.edit){ let v = el.type==='checkbox'?el.checked:el.value.trim(); if(el.dataset.upper) v=v.toUpperCase(); if(el.dataset.split) v=v.split('-').map(s=>s.trim()).filter(Boolean);
   if(el.dataset.edit.endsWith('.syl')) { const i=+el.dataset.edit.split('.')[1]; v=v.map(s=>s.toUpperCase()); C.words[i].w=v.join(''); }
