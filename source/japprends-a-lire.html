@@ -81,7 +81,7 @@ h1,h2,h3{margin:0;text-wrap:balance;line-height:1.1}
 /* niveaux */
 .path{display:flex;flex-direction:column;gap:14px}
 .lvl{display:flex;align-items:center;gap:14px;padding:12px;border-radius:var(--r);background:var(--card);border:2px solid var(--edge);text-align:left;width:100%}
-.lvl .glyph{width:72px;height:72px;border-radius:18px;display:grid;place-items:center;font-family:var(--f-read);font-weight:700;font-size:26px;background:var(--c);color:#fff;flex:none}
+.lvl .glyph{width:72px;height:72px;border-radius:18px;display:grid;place-items:center;text-align:center;line-height:1.05;padding:4px;overflow:hidden;font-family:var(--f-read);font-weight:700;font-size:var(--gs,26px);background:var(--c);color:#fff;flex:none}
 .lvl.locked{opacity:.6}
 .lvl.locked .glyph{background:var(--muted)}
 .lvl .info{flex:1;min-width:0}
@@ -92,10 +92,11 @@ h1,h2,h3{margin:0;text-wrap:balance;line-height:1.1}
 .status{font-size:26px}
 
 .lvl-head{display:flex;gap:16px;align-items:center;padding:16px;border-radius:var(--r);background:var(--c);color:#fff}
-.lvl-head .glyph{font-family:var(--f-read);font-weight:700;font-size:44px;background:rgba(255,255,255,.2);border-radius:16px;padding:6px 14px}
+.lvl-head .glyph{flex:none;text-align:center;line-height:1.05;font-family:var(--f-read);font-weight:700;font-size:44px;background:rgba(255,255,255,.2);border-radius:16px;padding:6px 14px}
 .tiles3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
 .tiles3 .btn{min-height:110px;flex-direction:column;font-size:19px}
 .tiles3 .btn .ico{font-size:36px}
+@media (max-width:519px){.tiles3 .btn:last-child:nth-child(odd){grid-column:1/-1;min-height:84px}}
 
 /* apprentissage des lettres */
 .letter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:10px}
@@ -514,6 +515,7 @@ const syllables = () => C.families.flatMap(c=>C.vowels.map(v=>({s:c+v,c,v,say:sy
 function parsePhrase(p){ const toks=p.src.trim().split(/\s+/); return toks.map(t=>{ const m=t.match(/^(.*?)([.,!?;:]*)$/); return {syl:m[1].split('-'), punct:m[2], word:m[1].replace(/-/g,'')}; }); }
 const phraseText = p => p.src.replace(/-/g,'');
 const phraseWordSay = (p,k,w) => (p.tr ? p.tr.split(/\s+/)[k] : null) || w.word.toLowerCase();
+const glyphSize = g => { const n=[...String(g)].length; return n<=2?'26px':n<=3?'24px':n<=4?'19px':'16px'; };
 const glyphOf = l => (C.levelGlyphs&&C.levelGlyphs[l.id]) || l.glyph;
 function applyLangAttrs(){ document.documentElement.dataset.dir = C.dir||'ltr'; document.documentElement.lang = C.dir==='rtl' ? 'nqo' : 'fr'; }
 function media(item, cls=''){ return item && item.img ? `<img src="${item.img}" alt="${esc(item.word||item.w||'')}" class="${cls}">` : `<span class="emo ${cls}">${item?.emoji||'❓'}</span>`; }
@@ -650,9 +652,9 @@ ACT.home = () => { NAV=[]; CUR=null; go('home',{},true); };
 
 /* ----- Carte des niveaux ----- */
 SCREENS.levels = () => `${topbar('Mes leçons')}
- <p class="muted">Alphabet → Voyelles → Consonnes et sons → Syllabes → Mots → Phrases → Lecture → Écriture → Évaluation</p>
+ <p class="muted">${LEVELS.map(l=>esc(l.name)).join(' → ')}</p>
  <div class="path">${LEVELS.map((l,i)=>{ const st=P.levels[l.id]||{}; const un=isUnlocked(i);
-   return `<button class="lvl ${un?'':'locked'}" style="--c:${l.color}" data-act="openLevel" data-arg="${i}"><span class="glyph">${esc(glyphOf(l))}</span>
+   return `<button class="lvl ${un?'':'locked'}" style="--c:${l.color}" data-act="openLevel" data-arg="${i}"><span class="glyph" style="--gs:${glyphSize(glyphOf(l))}">${esc(glyphOf(l))}</span>
    <span class="info"><span class="n">Niveau ${i+1}</span><br><span class="name">${esc(l.name)}</span><br>${starsHtml(st.stars||0)}</span>
    <span class="status" aria-label="${st.passed?'terminé':un?'ouvert':'verrouillé'}">${st.passed?'✅':un?'▶️':'🔒'}</span></button>`; }).join('')}</div>`;
 ACT.openLevel = a => { const i=+a, L=LEVELS[i]; if(L.frOnly&&C.noCase){ toast('La conjugaison est disponible en français.'); return; } if(!isUnlocked(i)){ sfxBad(); const req=L.requires?LEVELS.findIndex(x=>x.id===L.requires):i-1; toast(`🔒 Réussis d’abord le quiz du niveau ${req+1} (${S.threshold} %).`); return; } openLevelScreen(i); };
@@ -1062,7 +1064,7 @@ const withPron = (i,form) => i===0 && /^[aeiouyéèêâh]/i.test(form) ? 'j’'+
 const TENSES = { present:{name:'Présent', when:'Aujourd’hui'}, futur:{name:'Futur', when:'Demain'}, imparfait:{name:'Imparfait', when:'Avant'}, pc:{name:'Passé composé', when:'Hier'} };
 const CONJ = [
  {id:'c1', name:'Être et avoir', tense:'present', verbs:['être','avoir'], rule:'Être et avoir sont les verbes les plus utilisés. On les apprend par cœur : je suis, j’ai.', types:['cForm','cPron','cForm','cVerb']},
- {id:'c2', name:'Les verbes en -er', tense:'present', verbs:['parler','chanter','danser','jouer','marcher','regarder','donner','aimer','écouter','manger','travailler','laver'], rule:'Au présent, les verbes en -er finissent par : -e, -es, -e, -ons, -ez, -ent. Attention : nous mangeons.', types:['cForm','cEnding','cPron','cVerb']},
+ {id:'c2', name:'Les verbes en ‑er', tense:'present', verbs:['parler','chanter','danser','jouer','marcher','regarder','donner','aimer','écouter','manger','travailler','laver'], rule:'Au présent, les verbes en ‑er finissent par : -e, -es, -e, -ons, -ez, -ent. Attention : nous mangeons.', types:['cForm','cEnding','cPron','cVerb']},
  {id:'c3', name:'Aller, faire, venir…', tense:'present', verbs:['aller','faire','dire','venir','voir','prendre'], rule:'Ces verbes sont irréguliers : ils changent beaucoup. On les apprend par cœur.', types:['cForm','cPron','cForm','cVerb']},
  {id:'c4', name:'Pouvoir, vouloir, finir…', tense:'present', verbs:['pouvoir','vouloir','savoir','finir','boire','dormir','lire','écrire'], rule:'Au singulier, ces verbes finissent souvent par : -s, -s, -t (je finis, tu finis, il finit).', types:['cForm','cEnding','cPron','cVerb']},
  {id:'c5', name:'Le futur', tense:'futur', verbs:['être','avoir','aller','faire','parler','manger','finir','venir','pouvoir','voir'], rule:'Demain… Le futur finit par : -ai, -as, -a, -ons, -ez, -ont (je parlerai, nous irons).', types:['cForm','cEnding','cPron','cTime']},

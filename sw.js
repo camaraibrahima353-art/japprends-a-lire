@@ -1,7 +1,7 @@
 /* J'APPRENDS À LIRE — service worker (généré par build.py)
    Met en cache l'application, les polices, les icônes et les sons listés dans audio/<langue>/index.json
    pour un fonctionnement complet sans Internet. */
-const VERSION = 'jal-d2e85a6a9e';
+const VERSION = 'jal-03fa12e65d';
 const CORE = ["./", "index.html", "manifest.webmanifest", "lib/jszip.min.js", "fonts/andika-latin-400-normal.woff2", "fonts/andika-latin-700-normal.woff2", "fonts/andika-latin-ext-400-normal.woff2", "fonts/andika-latin-ext-700-normal.woff2", "fonts/baloo-2-latin-500-normal.woff2", "fonts/baloo-2-latin-600-normal.woff2", "fonts/baloo-2-latin-700-normal.woff2", "fonts/baloo-2-latin-800-normal.woff2", "fonts/noto-sans-nko-nko-400-normal.woff2", "icons/apple-touch-icon.png", "icons/favicon.png", "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png"];
 const LANGS = ['fr','emk-nkoo'];
 
