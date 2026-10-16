@@ -46,8 +46,16 @@ self.addEventListener('fetch', e => {
     return;
   }
   // pages : cache d'abord, sinon index.html
+  // pages : réseau d'abord (dernière version si Internet), sinon la copie gardée sur le téléphone
   if(req.mode === 'navigate'){
-    e.respondWith(caches.match('index.html').then(hit => hit || fetch(req)));
+    e.respondWith((async () => {
+      try{
+        const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 4000);
+        const r = await fetch(req, {cache:'no-cache', signal:ctl.signal}); clearTimeout(t);
+        if(r.ok){ const c = await caches.open(VERSION); c.put('index.html', r.clone()); return r; }
+        throw 0;
+      }catch(err){ return (await caches.match('index.html')) || fetch(req); }
+    })());
     return;
   }
   // tout le reste : cache d'abord, puis réseau (et mise en cache)

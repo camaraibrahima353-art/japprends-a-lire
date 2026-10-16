@@ -30,11 +30,13 @@ head=f"""<!doctype html>
 <style>{''.join(ff)}
 :root{{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}} body{{margin:0}} img{{max-width:100%}} [hidden]{{display:none!important}}
 html{{-webkit-text-size-adjust:100%}} body{{overscroll-behavior-y:contain;user-select:none;-webkit-user-select:none}} input,textarea{{user-select:text;-webkit-user-select:text}}</style>
-<script>window.JAL_PWA=true;</script>
+<script>window.JAL_PWA=true;window.JAL_VERSION='__APPVER__';</script>
 """
 src=src.replace('</style>\n\n<div id="app"','</style>\n</head>\n<body>\n<div id="app"',1)
 assert '<body>' in src
 html=head+src+'\n</body>\n</html>\n'
+import datetime
+html=html.replace('__APPVER__', datetime.datetime.utcnow().strftime('%Y.%m.%d-%H%M')+'-'+hashlib.sha1(src.encode()).hexdigest()[:6])
 open(os.path.join(PWA,'index.html'),'w',encoding='utf-8').write(html)
 # liste des fichiers à mettre en cache
 core=['./','index.html','manifest.webmanifest','lib/jszip.min.js']

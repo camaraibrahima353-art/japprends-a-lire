@@ -220,6 +220,10 @@ h1,h2,h3{margin:0;text-wrap:balance;line-height:1.1}
 .reader-text{line-height:1.7;overflow-wrap:anywhere}.rs{border-radius:8px;transition:background .2s}.rs.cur{background:color-mix(in srgb,var(--hl) 60%,transparent)}
 .rw{cursor:pointer;border-radius:6px}.rw.lit{background:var(--sun);color:#1D2142}
 .reader-bar{display:flex;gap:10px;align-items:center;position:sticky;bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--paper);padding:6px;border-radius:18px}
+.pw-wrap{position:relative}.pw-wrap input{width:100%}
+.pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:10px;font-size:22px;display:grid;place-items:center}
+.pw-check{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:24px}.pw-check span{font-size:13px;padding:2px 8px;border-radius:999px;background:var(--card);border:1px solid var(--edge);color:var(--muted)}
+.pw-check .warn{color:var(--bad);border-color:var(--bad)}
 .dict-slots{gap:6px}.dict-slots .slot{min-width:44px;height:58px;font-size:30px;padding:0 6px;border-radius:12px}
 .dict-slots.syl .slot{min-width:72px;height:66px;font-size:30px}.dict-slots.word .slot{min-width:64px;height:54px;font-size:22px}
 .slot.good{border-color:var(--good);background:var(--good-bg);color:var(--good)}.slot.bad{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
@@ -1699,15 +1703,28 @@ SCREENS.lock = () => `<div class="stack fade-in" style="align-items:center;text-
  <div class="logo" aria-hidden="true">🔒</div><h1 style="font-size:28px">Application privée</h1>
  <p class="muted" style="max-width:30ch">Cette application est réservée. Entrez le code d’accès pour l’ouvrir.</p>
  <form id="lock-form" class="stack" style="width:100%;max-width:320px" autocomplete="off">
-  <input type="password" id="lock-code" placeholder="Code d’accès" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="text-align:center;font-size:22px;letter-spacing:2px">
+  <div class="pw-wrap"><input type="password" id="lock-code" placeholder="Code d’accès" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="text-align:center;font-size:22px;letter-spacing:2px;padding-right:56px">
+   <button type="button" class="pw-eye" id="lock-eye" aria-label="Afficher le code" aria-pressed="false">👁</button></div>
+  <div class="pw-check" id="lock-check" aria-live="polite"></div>
   <button class="btn" style="--c:var(--ink)" type="submit">Ouvrir</button></form>
- <p class="note" id="lock-msg"></p></div>`;
-AFTER.lock = () => { const f=$('#lock-form'); if(!f) return; f.addEventListener('submit', async e=>{ e.preventDefault(); const m=$('#lock-msg');
+ <p class="note" id="lock-msg"></p>
+ <p class="note">Le code respecte les majuscules, les minuscules et les symboles (ex. : @).</p>
+ <div class="card stack" style="width:100%;max-width:360px;text-align:left"><b>Le code ne marche pas ?</b>
+  <p class="note" style="margin:0">Touchez 👁 pour vérifier ce que vous avez tapé. Si le code est juste mais refusé, le téléphone a peut-être une ancienne version : mettez-la à jour (Internet nécessaire).</p>
+  <button class="btn small" style="--c:var(--grape)" data-act="forceUpdate">🔄 Mettre à jour l’application</button>
+  <span class="note">Version : ${esc(window.JAL_VERSION||'—')}</span></div></div>`;
+AFTER.lock = () => { const f=$('#lock-form'); if(!f) return;
+  const inp=$('#lock-code'), eye=$('#lock-eye'), chk=$('#lock-check');
+  const showCheck = () => { const v=inp.value; if(!v){ chk.innerHTML=''; return; } const up=(v.match(/[A-Z]/g)||[]).length, lo=(v.match(/[a-z]/g)||[]).length, di=(v.match(/[0-9]/g)||[]).length, sy=(v.match(/[^A-Za-z0-9\s]/g)||[]).length;
+    chk.innerHTML = `<span>${v.length} caractère${v.length>1?'s':''}</span><span>${up} majuscule${up>1?'s':''}</span><span>${lo} minuscule${lo>1?'s':''}</span><span>${di} chiffre${di>1?'s':''}</span><span>${sy} symbole${sy>1?'s':''}</span>${/^\s|\s$/.test(v)?'<span class="warn">espace au début ou à la fin</span>':''}`; };
+  inp.addEventListener('input', showCheck);
+  eye.addEventListener('click', ()=>{ const show=inp.type==='password'; inp.type=show?'text':'password'; eye.textContent=show?'🙈':'👁'; eye.setAttribute('aria-pressed',show); eye.setAttribute('aria-label',show?'Cacher le code':'Afficher le code'); inp.focus(); }); f.addEventListener('submit', async e=>{ e.preventDefault(); const m=$('#lock-msg');
   if(Date.now()<LOCK_UNTIL){ m.textContent=`Trop d’essais. Réessayez dans ${Math.ceil((LOCK_UNTIL-Date.now())/1000)} s.`; return; }
   const v=($('#lock-code').value||'').trim(); if(!v) return;
   let h=''; try{ h=await sha256(v); }catch(_){ m.textContent='Ouvrez l’application avec son adresse https.'; return; }
   if(h===OWNER_HASH){ Store.set('jal.owner',OWNER_HASH); LOCK_TRIES=0; CUR=null; NAV=[]; go('home',{},true); toast('Bienvenue !'); return; }
   LOCK_TRIES++; sfxBad(); $('#lock-code').value=''; if(LOCK_TRIES>=5){ LOCK_UNTIL=Date.now()+60000; LOCK_TRIES=0; m.textContent='Code incorrect. Patientez 1 minute.'; } else m.textContent='Code incorrect.'; }); setTimeout(()=>$('#lock-code')?.focus(),100); };
+ACT.forceUpdate = async () => { toast('Mise à jour…',4000); try{ if('serviceWorker' in navigator){ for(const r of await navigator.serviceWorker.getRegistrations()) await r.unregister(); } if(window.caches){ for(const k of await caches.keys()) await caches.delete(k); } }catch(e){} setTimeout(()=>location.reload(),400); };
 ACT.lockDevice = () => confirmBox('Verrouiller cet appareil ? Il faudra le code d’accès pour rouvrir l’application.', ()=>{ Store.del('jal.owner'); NAV=[]; CUR=null; go('lock',{},true); });
 
 /* démarrage */

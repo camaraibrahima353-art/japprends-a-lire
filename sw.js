@@ -1,7 +1,7 @@
 /* J'APPRENDS À LIRE — service worker (généré par build.py)
    Met en cache l'application, les polices, les icônes et les sons listés dans audio/<langue>/index.json
    pour un fonctionnement complet sans Internet. */
-const VERSION = 'jal-41fa3982d2';
+const VERSION = 'jal-b5e14d4636';
 const CORE = ["./", "index.html", "manifest.webmanifest", "lib/jszip.min.js", "fonts/andika-latin-400-normal.woff2", "fonts/andika-latin-700-normal.woff2", "fonts/andika-latin-ext-400-normal.woff2", "fonts/andika-latin-ext-700-normal.woff2", "fonts/baloo-2-latin-500-normal.woff2", "fonts/baloo-2-latin-600-normal.woff2", "fonts/baloo-2-latin-700-normal.woff2", "fonts/baloo-2-latin-800-normal.woff2", "icons/apple-touch-icon.png", "icons/favicon.png", "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png"];
 const LANGS = ['fr'];
 
@@ -46,8 +46,16 @@ self.addEventListener('fetch', e => {
     return;
   }
   // pages : cache d'abord, sinon index.html
+  // pages : réseau d'abord (dernière version si Internet), sinon la copie gardée sur le téléphone
   if(req.mode === 'navigate'){
-    e.respondWith(caches.match('index.html').then(hit => hit || fetch(req)));
+    e.respondWith((async () => {
+      try{
+        const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 4000);
+        const r = await fetch(req, {cache:'no-cache', signal:ctl.signal}); clearTimeout(t);
+        if(r.ok){ const c = await caches.open(VERSION); c.put('index.html', r.clone()); return r; }
+        throw 0;
+      }catch(err){ return (await caches.match('index.html')) || fetch(req); }
+    })());
     return;
   }
   // tout le reste : cache d'abord, puis réseau (et mise en cache)

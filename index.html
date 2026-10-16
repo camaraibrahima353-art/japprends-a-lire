@@ -13,7 +13,7 @@
 <style>@font-face{font-family:'Andika';font-weight:400;font-display:swap;src:url(fonts/andika-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Andika';font-weight:400;font-display:swap;src:url(fonts/andika-latin-ext-400-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:'Andika';font-weight:700;font-display:swap;src:url(fonts/andika-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Andika';font-weight:700;font-display:swap;src:url(fonts/andika-latin-ext-700-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:'Baloo 2';font-weight:500;font-display:swap;src:url(fonts/baloo-2-latin-500-normal.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-weight:600;font-display:swap;src:url(fonts/baloo-2-latin-600-normal.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-weight:700;font-display:swap;src:url(fonts/baloo-2-latin-700-normal.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-weight:800;font-display:swap;src:url(fonts/baloo-2-latin-800-normal.woff2) format('woff2')}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} body{margin:0} img{max-width:100%} [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%} body{overscroll-behavior-y:contain;user-select:none;-webkit-user-select:none} input,textarea{user-select:text;-webkit-user-select:text}</style>
-<script>window.JAL_PWA=true;</script>
+<script>window.JAL_PWA=true;window.JAL_VERSION='2026.10.16-2033-e47777';</script>
 <title>J’apprends à lire</title>
 <meta name="theme-color" content="#2446B8">
 <style>
@@ -233,6 +233,10 @@ h1,h2,h3{margin:0;text-wrap:balance;line-height:1.1}
 .reader-text{line-height:1.7;overflow-wrap:anywhere}.rs{border-radius:8px;transition:background .2s}.rs.cur{background:color-mix(in srgb,var(--hl) 60%,transparent)}
 .rw{cursor:pointer;border-radius:6px}.rw.lit{background:var(--sun);color:#1D2142}
 .reader-bar{display:flex;gap:10px;align-items:center;position:sticky;bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--paper);padding:6px;border-radius:18px}
+.pw-wrap{position:relative}.pw-wrap input{width:100%}
+.pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:10px;font-size:22px;display:grid;place-items:center}
+.pw-check{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:24px}.pw-check span{font-size:13px;padding:2px 8px;border-radius:999px;background:var(--card);border:1px solid var(--edge);color:var(--muted)}
+.pw-check .warn{color:var(--bad);border-color:var(--bad)}
 .dict-slots{gap:6px}.dict-slots .slot{min-width:44px;height:58px;font-size:30px;padding:0 6px;border-radius:12px}
 .dict-slots.syl .slot{min-width:72px;height:66px;font-size:30px}.dict-slots.word .slot{min-width:64px;height:54px;font-size:22px}
 .slot.good{border-color:var(--good);background:var(--good-bg);color:var(--good)}.slot.bad{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
@@ -1713,15 +1717,28 @@ SCREENS.lock = () => `<div class="stack fade-in" style="align-items:center;text-
  <div class="logo" aria-hidden="true">🔒</div><h1 style="font-size:28px">Application privée</h1>
  <p class="muted" style="max-width:30ch">Cette application est réservée. Entrez le code d’accès pour l’ouvrir.</p>
  <form id="lock-form" class="stack" style="width:100%;max-width:320px" autocomplete="off">
-  <input type="password" id="lock-code" placeholder="Code d’accès" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="text-align:center;font-size:22px;letter-spacing:2px">
+  <div class="pw-wrap"><input type="password" id="lock-code" placeholder="Code d’accès" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="text-align:center;font-size:22px;letter-spacing:2px;padding-right:56px">
+   <button type="button" class="pw-eye" id="lock-eye" aria-label="Afficher le code" aria-pressed="false">👁</button></div>
+  <div class="pw-check" id="lock-check" aria-live="polite"></div>
   <button class="btn" style="--c:var(--ink)" type="submit">Ouvrir</button></form>
- <p class="note" id="lock-msg"></p></div>`;
-AFTER.lock = () => { const f=$('#lock-form'); if(!f) return; f.addEventListener('submit', async e=>{ e.preventDefault(); const m=$('#lock-msg');
+ <p class="note" id="lock-msg"></p>
+ <p class="note">Le code respecte les majuscules, les minuscules et les symboles (ex. : @).</p>
+ <div class="card stack" style="width:100%;max-width:360px;text-align:left"><b>Le code ne marche pas ?</b>
+  <p class="note" style="margin:0">Touchez 👁 pour vérifier ce que vous avez tapé. Si le code est juste mais refusé, le téléphone a peut-être une ancienne version : mettez-la à jour (Internet nécessaire).</p>
+  <button class="btn small" style="--c:var(--grape)" data-act="forceUpdate">🔄 Mettre à jour l’application</button>
+  <span class="note">Version : ${esc(window.JAL_VERSION||'—')}</span></div></div>`;
+AFTER.lock = () => { const f=$('#lock-form'); if(!f) return;
+  const inp=$('#lock-code'), eye=$('#lock-eye'), chk=$('#lock-check');
+  const showCheck = () => { const v=inp.value; if(!v){ chk.innerHTML=''; return; } const up=(v.match(/[A-Z]/g)||[]).length, lo=(v.match(/[a-z]/g)||[]).length, di=(v.match(/[0-9]/g)||[]).length, sy=(v.match(/[^A-Za-z0-9\s]/g)||[]).length;
+    chk.innerHTML = `<span>${v.length} caractère${v.length>1?'s':''}</span><span>${up} majuscule${up>1?'s':''}</span><span>${lo} minuscule${lo>1?'s':''}</span><span>${di} chiffre${di>1?'s':''}</span><span>${sy} symbole${sy>1?'s':''}</span>${/^\s|\s$/.test(v)?'<span class="warn">espace au début ou à la fin</span>':''}`; };
+  inp.addEventListener('input', showCheck);
+  eye.addEventListener('click', ()=>{ const show=inp.type==='password'; inp.type=show?'text':'password'; eye.textContent=show?'🙈':'👁'; eye.setAttribute('aria-pressed',show); eye.setAttribute('aria-label',show?'Cacher le code':'Afficher le code'); inp.focus(); }); f.addEventListener('submit', async e=>{ e.preventDefault(); const m=$('#lock-msg');
   if(Date.now()<LOCK_UNTIL){ m.textContent=`Trop d’essais. Réessayez dans ${Math.ceil((LOCK_UNTIL-Date.now())/1000)} s.`; return; }
   const v=($('#lock-code').value||'').trim(); if(!v) return;
   let h=''; try{ h=await sha256(v); }catch(_){ m.textContent='Ouvrez l’application avec son adresse https.'; return; }
   if(h===OWNER_HASH){ Store.set('jal.owner',OWNER_HASH); LOCK_TRIES=0; CUR=null; NAV=[]; go('home',{},true); toast('Bienvenue !'); return; }
   LOCK_TRIES++; sfxBad(); $('#lock-code').value=''; if(LOCK_TRIES>=5){ LOCK_UNTIL=Date.now()+60000; LOCK_TRIES=0; m.textContent='Code incorrect. Patientez 1 minute.'; } else m.textContent='Code incorrect.'; }); setTimeout(()=>$('#lock-code')?.focus(),100); };
+ACT.forceUpdate = async () => { toast('Mise à jour…',4000); try{ if('serviceWorker' in navigator){ for(const r of await navigator.serviceWorker.getRegistrations()) await r.unregister(); } if(window.caches){ for(const k of await caches.keys()) await caches.delete(k); } }catch(e){} setTimeout(()=>location.reload(),400); };
 ACT.lockDevice = () => confirmBox('Verrouiller cet appareil ? Il faudra le code d’accès pour rouvrir l’application.', ()=>{ Store.del('jal.owner'); NAV=[]; CUR=null; go('lock',{},true); });
 
 /* démarrage */
