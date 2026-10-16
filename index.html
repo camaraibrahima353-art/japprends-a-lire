@@ -13,7 +13,7 @@
 <style>@font-face{font-family:'Andika';font-weight:400;font-display:swap;src:url(fonts/andika-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Andika';font-weight:400;font-display:swap;src:url(fonts/andika-latin-ext-400-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:'Andika';font-weight:700;font-display:swap;src:url(fonts/andika-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Andika';font-weight:700;font-display:swap;src:url(fonts/andika-latin-ext-700-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:'Baloo 2';font-weight:500;font-display:swap;src:url(fonts/baloo-2-latin-500-normal.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-weight:600;font-display:swap;src:url(fonts/baloo-2-latin-600-normal.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-weight:700;font-display:swap;src:url(fonts/baloo-2-latin-700-normal.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-weight:800;font-display:swap;src:url(fonts/baloo-2-latin-800-normal.woff2) format('woff2')}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} body{margin:0} img{max-width:100%} [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%} body{overscroll-behavior-y:contain;user-select:none;-webkit-user-select:none} input,textarea{user-select:text;-webkit-user-select:text}</style>
-<script>window.JAL_PWA=true;window.JAL_VERSION='2026.10.16-2033-e47777';</script>
+<script>window.JAL_PWA=true;window.JAL_VERSION='2026.10.16-2047-c570fc';</script>
 <title>J’apprends à lire</title>
 <meta name="theme-color" content="#2446B8">
 <style>
@@ -230,7 +230,13 @@ h1,h2,h3{margin:0;text-wrap:balance;line-height:1.1}
 .mexpr .ans.good{color:var(--good);border-color:var(--good)}.mexpr .ans.bad{color:var(--bad);border-color:var(--bad)}
 .numpad{max-width:360px}.numpad button{height:64px;font-size:30px}.numpad button.ok{background:var(--leaf);color:#fff;border-color:var(--leaf)}
 .story{display:flex;gap:12px;align-items:flex-start}
-.reader-text{line-height:1.7;overflow-wrap:anywhere}.rs{border-radius:8px;transition:background .2s}.rs.cur{background:color-mix(in srgb,var(--hl) 60%,transparent)}
+.reader-text{line-height:1.75;overflow-wrap:anywhere}.pbreak{display:block;height:.7em}
+.rw.doubt{text-decoration:underline wavy var(--warn);text-underline-offset:5px}
+.your-turn{text-align:center;font-weight:800;font-size:20px;color:var(--grape);padding:10px;border-radius:14px;background:color-mix(in srgb,var(--grape) 12%,var(--card));animation:pulse 1.4s ease-in-out infinite}
+.rd-modes{justify-content:center}.rd-modes button{font-size:15px}
+.cap-stage{position:relative;margin:0 auto;width:100%;align-self:center;max-width:100%;touch-action:none;border-radius:12px;overflow:hidden;background:#000}
+.cap-stage canvas,.cap-stage svg{position:absolute;inset:0;touch-action:none}
+.tips{margin:6px 0 0;padding-left:20px;line-height:1.6}.rs{border-radius:8px;transition:background .2s}.rs.cur{background:color-mix(in srgb,var(--hl) 60%,transparent)}
 .rw{cursor:pointer;border-radius:6px}.rw.lit{background:var(--sun);color:#1D2142}
 .reader-bar{display:flex;gap:10px;align-items:center;position:sticky;bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--paper);padding:6px;border-radius:18px}
 .pw-wrap{position:relative}.pw-wrap input{width:100%}
@@ -541,7 +547,7 @@ function media(item, cls=''){ return item && item.img ? `<img src="${item.img}" 
 // Chaque clé peut pointer vers un fichier (« audio/fr/lettres/a.mp3 ») ou un son importé dans l’administration.
 let VOICE=null, CUR_AUDIO=null, speakTok=0;
 const hasTTS = 'speechSynthesis' in window;
-function pickVoice(){ if(!hasTTS) return; const vs=speechSynthesis.getVoices(); VOICE = vs.find(v=>/^fr[-_]FR/i.test(v.lang)&&/google|natural|premium|enhanced/i.test(v.name)) || vs.find(v=>/^fr[-_]FR/i.test(v.lang)) || vs.find(v=>/^fr/i.test(v.lang)) || null; }
+function pickVoice(){ if(!hasTTS) return; const vs=speechSynthesis.getVoices(); VOICE = (S.voiceName&&vs.find(v=>v.name===S.voiceName)) || vs.find(v=>/^fr[-_]FR/i.test(v.lang)&&/google|natural|premium|enhanced/i.test(v.name)) || vs.find(v=>/^fr[-_]FR/i.test(v.lang)) || vs.find(v=>/^fr/i.test(v.lang)) || null; }
 if(hasTTS){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
 const A = (key,text) => ({key,text});
 function stopSpeech(){ speakTok++; try{ hasTTS&&speechSynthesis.cancel(); }catch(e){} if(CUR_AUDIO){ try{CUR_AUDIO.pause();}catch(e){} CUR_AUDIO=null; } }
@@ -1338,84 +1344,263 @@ SCREENS.mqEnd = () => { const chrono=MQ.kind==='chrono'; const next = MQ.kind===
 AFTER.mqEnd = () => { if(MQ.pct>=S.threshold&&MQ.kind!=='chrono'||MQ.record){ sfxWin(); confetti(); } say([MQ.kind==='chrono'?`${MQ.score} bonnes réponses !`:MQ.pct>=S.threshold?'Bravo !':'Encore un petit effort, tu vas y arriver !']); };
 ACT.mqAgain = () => { const k=MQ.kind; if(k==='level') return ACT.calcOpen(String(MQ.lk)); if(k==='table') return ACT.tabPractice(String(MQ.n)); if(k==='ops') return ACT.opsQuiz(); if(k==='chrono') return ACT.chronoStart(MQ.cid); startMath({kind:'mixed', title:MQ.title, items:shuffle(MQ.items.map(q=>qOf(q.a,'×',rnd(0,10))))}); };
 
-/* ===================== LIRE UN TEXTE (photo → texte → lecture à voix haute) ===================== */
-const SAMPLE_TEXT = {title:'Exemple : le marché', text:'Le samedi, Aïssatou va au marché avec sa maman. Elles achètent des mangues, des tomates et du riz. Le marchand sourit et donne une banane à Aïssatou. Sur le chemin du retour, elles saluent les voisins.'};
-let RD = {text:'', title:'', s:0, playing:false, rate:0.85, size:26, edit:false, ocr:null};
+/* ===================== LIRE UN TEXTE (photo → texte → lecture à voix haute) =====================
+   1. Photo → recadrage : détection automatique de la page + 4 coins déplaçables, rotation
+   2. Redressement de la perspective, nettoyage (ombres, contraste), binarisation adaptative
+   3. Reconnaissance Tesseract (français) en 2 passes si besoin, corrections automatiques
+   4. Lecture à voix haute : phrase par phrase, « Écoute et répète » ou mot à mot, mot surligné */
+const SAMPLE_TEXT = {title:'Exemple : le marché', text:'Le samedi, Aïssatou va au marché avec sa maman. Elles achètent des mangues, des tomates et du riz. Le marchand sourit et donne une banane à Aïssatou.\n\nSur le chemin du retour, elles saluent les voisins. « Bonjour ! » dit Aïssatou.'};
+let RD = {text:'', title:'', s:0, playing:false, rate:0.85, size:26, edit:false, ocr:null, cap:null, mode:'continu', doubt:[], turn:false};
 const loadTexts = () => Store.get('jal.texts',[]);
 const saveTexts = t => Store.set('jal.texts',t);
-function splitSentences(text){ return (text.match(/[^.!?…\n]+[.!?…]*[»"”]?|\n+/g)||[]).map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean); }
-function cleanOcr(t){ return t.replace(/-\n(\w)/g,'$1').replace(/[ \t]+\n/g,'\n').replace(/([^\n])\n(?!\n)/g,'$1 ').replace(/\n{2,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').replace(/[|_~]/g,'').trim(); }
+const ABBR_END = /(?:^|\s)(?:M|MM|Mme|Mmes|Mlle|Dr|Pr|St|Ste|etc|ex|cf|p|av|apr|n°|[A-ZÀ-Ý])\.$/;
+function splitSentences(text){ const out=[];
+ text.split(/\n\s*\n/).forEach((para,pi)=>{ const p=para.replace(/\s+/g,' ').trim(); if(!p) return; if(out.length) out.push('\n');
+  let buf=''; const parts=p.split(/(?<=[.!?…]|[.!?…][»”"])\s+/); for(let j=0;j<parts.length;j++){ let part=parts[j]; const m=part.match(/^([»”"])\s*(.*)$/); if(m&&out.length&&!buf){ out[out.length-1]+=' '+m[1]; part=m[2]; if(!part) continue; } buf = buf ? buf+' '+part : part; if(ABBR_END.test(buf)) continue; out.push(buf); buf=''; } if(buf) out.push(buf); });
+ return out; }
+// Corrections des erreurs fréquentes de reconnaissance en français
+function cleanOcr(t){
+ t = t.replace(/\r/g,'')
+  .replace(/[‘`´]/g,'’').replace(/'/g,'’')
+  .replace(/(\p{L})-\s*\n\s*(\p{L})/gu,'$1$2')                    // mots coupés en fin de ligne
+  .replace(/(\p{Ll})[|1](\p{Ll})/gu,'$1l$2').replace(/(\p{Ll})0(\p{Ll})/gu,'$1o$2')
+  .replace(/(^|\s)[|](?=\p{Ll})/gu,'$1l').replace(/(^|\s)0(?=\p{Ll}{2})/gu,'$1o')
+  .replace(/\b([ldjmnstcqu]|qu|jusqu|lorsqu|puisqu)\s*’\s*(?=\p{L})/giu,'$1’')   // l ’enfant → l’enfant
+  .replace(/«\s*/g,'« ').replace(/\s*»/g,' »')
+  .replace(/[|_~*■□●◆©®¬¦]+/g,' ');
+ const lines = t.split('\n').filter(l=>{ const s=l.trim(); if(!s) return true; const letters=(s.match(/\p{L}/gu)||[]).length; return letters>=2 && letters/s.length>0.4; });
+ return lines.join('\n').replace(/([^\n])\n(?!\n)/g,'$1 ').replace(/\n{3,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').replace(/ ([.,])/g,'$1').trim(); }
+
+/* --- voix --- */
+const frVoices = () => hasTTS ? speechSynthesis.getVoices().filter(v=>/^fr/i.test(v.lang)) : [];
+
+/* --- écrans --- */
 SCREENS.reader = () => { const texts=loadTexts();
  if(RD.ocr) return `${topbar('Lire un texte','<span></span>')}<div class="stack fade-in" style="align-items:center;text-align:center">
-   ${RD.ocr.img?`<img src="${RD.ocr.img}" alt="Photo du texte" style="max-height:260px;border-radius:14px;border:2px solid var(--edge)">`:''}
-   <b style="font-size:20px">Je lis la photo…</b><div class="meter" style="width:100%"><i id="ocr-bar" style="width:${Math.round((RD.ocr.p||0)*100)}%"></i></div><p class="note" id="ocr-st">${esc(RD.ocr.st||'Préparation…')}</p>
+   ${RD.ocr.img?`<img src="${RD.ocr.img}" alt="Texte préparé" style="max-height:300px;max-width:100%;border-radius:14px;border:2px solid var(--edge);background:#fff">`:''}
+   <b style="font-size:20px">Je lis le texte…</b><div class="meter" style="width:100%"><i id="ocr-bar" style="width:${Math.round((RD.ocr.p||0)*100)}%"></i></div><p class="note" id="ocr-st">${esc(RD.ocr.st||'Préparation…')}</p>
    <p class="note">La première fois, l’application prépare la lecture des photos (environ 4 Mo), ensuite tout marche sans Internet.</p></div>`;
- if(RD.edit) return `${topbar('Corriger le texte','<span></span>')}<div class="stack fade-in"><p class="note">Corrige les erreurs de lecture de la photo si besoin.</p>
+ if(RD.cap) return `${topbar('Recadrer le texte','<span></span>')}<div class="stack fade-in">
+   <p class="note" style="margin:0">Place les 4 points bleus sur les coins du texte (ou de la page). L’application redresse la photo.</p>
+   <div class="cap-stage" id="cap-stage"><canvas id="cap-cv"></canvas><svg id="cap-svg"></svg></div>
+   <div class="row"><button class="btn ghost small grow" data-act="capRot" data-arg="-90">↺ Tourner</button><button class="btn ghost small grow" data-act="capRot" data-arg="90">↻ Tourner</button><button class="btn ghost small grow" data-act="capAuto">✨ Auto</button><button class="btn ghost small grow" data-act="capFull">⛶ Tout</button></div>
+   <button class="btn" style="--c:var(--hibiscus)" data-act="capGo">✓ Lire ce texte</button>
+   <button class="btn ghost small" data-act="capCancel">Annuler</button></div>`;
+ if(RD.edit) return `${topbar('Corriger le texte','<span></span>')}<div class="stack fade-in"><p class="note">Corrige les erreurs de lecture de la photo si besoin.${RD.doubt.length?` Mots à vérifier : <b>${RD.doubt.slice(0,20).map(esc).join(', ')}</b>`:''}</p>
    <label class="field" for="rd-title">Titre<input type="text" id="rd-title" value="${esc(RD.title)}"></label>
    <textarea id="rd-text" class="read" style="font-family:var(--f-read);font-size:19px;min-height:260px">${esc(RD.text)}</textarea>
-   <div class="row"><button class="btn grow" style="--c:var(--leaf)" data-act="rdEditDone">✓ Terminé</button><button class="btn ghost grow" data-act="rdClose">Annuler</button></div></div>`;
+   <div class="row"><button class="btn grow" style="--c:var(--leaf)" data-act="rdEditDone">✓ Terminé</button><button class="btn ghost grow" data-act="rdEditCancel">Annuler</button></div></div>`;
  if(!RD.text) return `${topbar('Lire un texte')}<div class="stack fade-in">
    <div class="card stack"><b style="font-size:20px">📷 Photographie un texte</b><p style="margin:0">Prends en photo une page de livre ou un cahier : l’application trouve le texte et te le lit à voix haute.</p>
     <label class="btn" style="--c:var(--hibiscus)">📷 Prendre une photo<input type="file" accept="image/*" capture="environment" data-ocr="1" hidden></label>
-    <label class="btn" style="--c:var(--sky)">🖼 Choisir une image<input type="file" accept="image/*" data-ocr="1" hidden></label>
-    <p class="note">Conseils : page bien à plat, bonne lumière, texte imprimé (pas écrit à la main), un seul paragraphe à la fois.</p></div>
+    <label class="btn" style="--c:var(--sky)">🖼 Choisir une image<input type="file" accept="image/*" data-ocr="1" hidden></label></div>
+   <div class="card"><b>📸 Pour une lecture parfaite</b><ul class="tips"><li>Page bien à plat, téléphone parallèle à la page.</li><li>Beaucoup de lumière, sans ombre de la main ou du téléphone.</li><li>Approche-toi : le texte doit remplir la photo.</li><li>Tiens le téléphone immobile, attends que l’image soit nette.</li><li>Texte imprimé (l’écriture à la main est mal reconnue).</li></ul></div>
    <div class="row"><button class="btn ghost grow" data-act="rdType">⌨️ Écrire ou coller un texte</button><button class="btn ghost grow" data-act="rdSample">📄 Texte d’exemple</button></div>
    ${texts.length?`<h2 class="section-title">Mes textes</h2><div class="list">${texts.map(t=>`<div class="li"><button class="grow" style="text-align:left" data-act="rdOpen" data-arg="${t.id}"><b>${esc(t.title)}</b><br><span class="note">${esc(t.date)} · ${t.text.split(/\s+/).length} mots</span></button><button class="btn-icon" style="width:40px;height:40px;font-size:16px" data-act="rdDel" data-arg="${t.id}" aria-label="Supprimer">🗑</button></div>`).join('')}</div>`:''}</div>`;
- const sents=splitSentences(RD.text);
+ const sents=splitSentences(RD.text); const doubt=new Set(RD.doubt.map(w=>w.toLowerCase())); const nS=sents.filter(s=>s!=='\n').length; const voices=frVoices();
  return `${topbar(esc(RD.title||'Mon texte'))}<div class="stack fade-in">
-  <div class="card reader-text read" id="rd" style="font-size:${RD.size}px">${sents.map((s,i)=>s.startsWith('\n')?'<br><br>':`<span class="rs ${i===RD.s&&RD.playing?'cur':''}" data-i="${i}">${s.split(/(\s+)/).map((w,j)=>/\s/.test(w)||!w?w:`<span class="rw" data-act="rdWord" data-arg="${esc(w)}">${esc(w)}</span>`).join('')}</span> `).join('')}</div>
-  <div class="reader-bar">
-   <button class="btn-icon" data-act="rdPrev" aria-label="Phrase précédente">⏮</button>
+  <div class="seg rd-modes">${[['continu','▶ Lecture'],['repeter','🗣️ Écoute et répète'],['mot','🔤 Mot à mot']].map(([m,l])=>`<button class="${RD.mode===m?'on':''}" data-act="rdMode" data-arg="${m}">${l}</button>`).join('')}</div>
+  <div class="card reader-text read" id="rd" style="font-size:${RD.size}px">${sents.map((s,i)=>s==='\n'?'<span class="pbreak"></span>':`<span class="rs" data-i="${i}">${s.split(/(\s+)/).map(w=>/^\s*$/.test(w)?w:`<span class="rw ${doubt.has(w.replace(/[^\p{L}’'-]/gu,'').toLowerCase())?'doubt':''}" data-act="rdWord" data-arg="${esc(w)}">${esc(w)}</span>`).join('')}</span> `).join('')}</div>
+  ${RD.turn?`<div class="your-turn">🗣️ À toi de lire cette phrase !</div>`:''}
+  ${RD.doubt.length?`<p class="note">⚠️ Les mots soulignés en orange sont peut-être mal lus : touche ✏️ Corriger pour les vérifier.</p>`:''}
+  <div class="reader-bar"><button class="btn-icon" data-act="rdPrev" aria-label="Phrase précédente">⏮</button>
    <button class="btn" style="--c:var(--ink);flex:1" data-act="rdPlay">${RD.playing?'⏸ Pause':'▶ Lire'}</button>
    <button class="btn-icon" data-act="rdNextS" aria-label="Phrase suivante">⏭</button></div>
-  <div class="row" style="justify-content:space-between"><div class="seg">${[[0.65,'🐢 Lent'],[0.85,'Normal'],[1,'Rapide']].map(([v,l])=>`<button class="${RD.rate===v?'on':''}" data-act="rdRate" data-arg="${v}">${l}</button>`).join('')}</div>
+  <div class="row" style="justify-content:space-between"><div class="seg">${[[0.6,'🐢 Lent'],[0.8,'Normal'],[1,'Rapide']].map(([v,l])=>`<button class="${RD.rate===v?'on':''}" data-act="rdRate" data-arg="${v}">${l}</button>`).join('')}</div>
    <div class="seg"><button data-act="rdSize" data-arg="-2" aria-label="Plus petit">A−</button><button data-act="rdSize" data-arg="2" aria-label="Plus grand">A+</button></div></div>
-  <p class="note">Touche un mot pour l’entendre. Phrase ${Math.min(RD.s+1,sents.filter(s=>!s.startsWith('\n')).length)} / ${sents.filter(s=>!s.startsWith('\n')).length}.</p>
+  ${voices.length>1?`<label class="field" for="rd-voice">Voix<select id="rd-voice" data-act-change="setVoice">${voices.map(v=>`<option value="${esc(v.name)}" ${VOICE&&VOICE.name===v.name?'selected':''}>${esc(v.name)}${v.localService?'':' (Internet)'}</option>`).join('')}</select></label>`:''}
+  <p class="note">Touche un mot pour l’entendre. Phrase <span id="rd-pos">${Math.min(sents.slice(0,RD.s+1).filter(s=>s!=='\n').length||1,nS)}</span> / ${nS}.</p>
   <div class="row"><button class="btn ghost small grow" data-act="rdEdit">✏️ Corriger</button>${RD.id?'':`<button class="btn small grow" style="--c:var(--leaf)" data-act="rdSave">💾 Garder</button>`}<button class="btn ghost small grow" data-act="rdClose">📷 Nouveau texte</button></div></div>`; };
-function rdSentences(){ return splitSentences(RD.text); }
-function rdMark(){ $$('#rd .rs').forEach(e=>e.classList.toggle('cur', +e.dataset.i===RD.s && RD.playing)); $$('#rd .rw.lit').forEach(e=>e.classList.remove('lit')); }
-function rdSpeak(i){ const ss=rdSentences(); while(i<ss.length && ss[i].startsWith('\n')) i++; if(i>=ss.length){ RD.playing=false; RD.s=0; rerender(); return; }
- RD.s=i; rdMark(); stopSpeech(); const tok=speakTok; if(!hasTTS){ toast('Pas de voix sur cet appareil.'); RD.playing=false; rerender(); return; }
- const sentence=ss[i]; const u=new SpeechSynthesisUtterance(sentence); u.lang='fr-FR'; if(VOICE) u.voice=VOICE; u.rate=RD.rate;
- const el=$(`#rd .rs[data-i="${i}"]`); const words=el?$$('.rw',el):[]; const offs=[]; let pos=0; words.forEach(w=>{ const ix=sentence.indexOf(w.textContent,pos); offs.push(ix); pos=ix+w.textContent.length; });
- u.onboundary = e => { if(tok!==speakTok) return; let k=-1; offs.forEach((o,j)=>{ if(o<=e.charIndex) k=j; }); words.forEach(w=>w.classList.remove('lit')); if(k>=0) words[k].classList.add('lit'); };
- u.onend = () => { if(tok!==speakTok||!RD.playing||CUR.name!=='reader') return; setTimeout(()=>{ if(tok===speakTok&&RD.playing) rdSpeak(i+1); },250); };
- el&&el.scrollIntoView({block:'center',behavior:'smooth'});
- setTimeout(()=>{ if(tok===speakTok) speechSynthesis.speak(u); },60); }
-ACT.rdPlay = () => { if(RD.playing){ RD.playing=false; stopSpeech(); rerender(); return; } RD.playing=true; rerender(); rdSpeak(RD.s); };
-ACT.rdPrev = () => { RD.s=Math.max(0,RD.s-1); while(RD.s>0&&rdSentences()[RD.s]?.startsWith('\n')) RD.s--; RD.playing=true; rerender(); rdSpeak(RD.s); };
+AFTER.reader = () => { if(RD.cap) capDraw(); };
+
+/* --- lecture à voix haute --- */
+const tokNorm = w => w.replace(/[«»“”"()\[\]]/g,'').replace(/…/g,'.').trim();
+function rdMark(){ $$('#rd .rs').forEach(e=>e.classList.toggle('cur', +e.dataset.i===RD.s && (RD.playing||RD.turn))); $$('#rd .rw.lit').forEach(e=>e.classList.remove('lit')); const p=$('#rd-pos'); if(p){ const ss=splitSentences(RD.text); p.textContent=ss.slice(0,RD.s+1).filter(s=>s!=='\n').length||1; } }
+function speakOne(text, rate, hooks={}){ return new Promise(res=>{ if(!hasTTS||!text){ res(0); return; }
+ const u=new SpeechSynthesisUtterance(text); u.lang='fr-FR'; if(VOICE) u.voice=VOICE; u.rate=rate; u.pitch=1;
+ let t0=0, done=false, gotB=false, timer=null; const fin=()=>{ if(done) return; done=true; clearInterval(timer); res(t0?Date.now()-t0:0); };
+ u.onstart=()=>{ t0=Date.now(); if(hooks.word){ // si la voix ne signale pas les mots, on estime leur moment
+   setTimeout(()=>{ if(gotB||done) return; const ws=hooks.words||[]; let k=0, acc=0; const per=ws.map(w=>(w.length+2)*62/rate); hooks.word(0);
+    timer=setInterval(()=>{ acc+=50; if(k<ws.length-1 && acc>=per[k]){ acc=0; k++; hooks.word(k); } },50); },350); } };
+ u.onboundary=e=>{ if(e.name && e.name!=='word') return; gotB=true; clearInterval(timer); hooks.boundary&&hooks.boundary(e.charIndex); };
+ u.onend=fin; u.onerror=fin; setTimeout(fin, 3000+text.length*140/rate);
+ speechSynthesis.speak(u); }); }
+async function rdSpeak(i){ stopSpeech(); const tok=speakTok; RD.turn=false; await wait(60); if(tok!==speakTok) return;
+ const ss=splitSentences(RD.text); let para=false; while(i<ss.length && ss[i]==='\n'){ i++; para=true; }
+ if(i>=ss.length){ RD.playing=false; RD.s=0; RD.turn=false; rerender(); if(i>0) say(['Bravo, tu as fini le texte !']); return; }
+ RD.s=i; rdMark(); const el=$(`#rd .rs[data-i="${i}"]`); el&&el.scrollIntoView({block:'center',behavior:'smooth'});
+ const words=el?$$('.rw',el):[]; const lit=k=>{ words.forEach(w=>w.classList.remove('lit')); if(k>=0&&words[k]) words[k].classList.add('lit'); };
+ if(RD.mode==='mot'){ for(let k=0;k<words.length;k++){ if(tok!==speakTok) return; const t=tokNorm(words[k].textContent).replace(/[.,;:!?]+$/,''); if(!t) continue; lit(k); await speakOne(t, Math.max(.5,RD.rate-.1)); await wait(350); } }
+ else { // texte prononcé construit mot par mot pour suivre le surlignage
+  let text='', offs=[], map=[]; words.forEach((w,k)=>{ let t=tokNorm(w.textContent); if(/^[-–—]+$/.test(t)){ if(text) text+=','; return; } if(!t) return; if(text) text+=' '; offs.push(text.length); map.push(k); text+=t; });
+  const dur=await speakOne(text, RD.rate, { words:map.map(k=>words[k].textContent), word:j=>{ if(tok===speakTok) lit(map[j]); }, boundary:c=>{ if(tok!==speakTok) return; let j=-1; offs.forEach((o,x)=>{ if(o<=c) j=x; }); lit(j>=0?map[j]:-1); } });
+  if(tok!==speakTok) return; lit(-1);
+  if(RD.mode==='repeter'){ RD.turn=true; const yt=document.createElement('div'); const old=$('.your-turn'); if(!old){ yt.className='your-turn'; yt.textContent='🗣️ À toi de lire cette phrase !'; $('#rd')?.after(yt); } rdMark();
+   await wait(Math.max(2200, dur*1.3)); if(tok!==speakTok) return; RD.turn=false; $('.your-turn')?.remove(); } }
+ lit(-1); if(tok!==speakTok||!RD.playing||CUR.name!=='reader') return;
+ const next=ss[i+1]==='\n'; await wait(next?800:350); if(tok===speakTok&&RD.playing) rdSpeak(i+1); }
+ACT.rdPlay = () => { if(RD.playing){ RD.playing=false; RD.turn=false; stopSpeech(); rerender(); return; } RD.playing=true; rerender(); rdSpeak(RD.s); };
+ACT.rdPrev = () => { const ss=splitSentences(RD.text); let i=RD.s-1; while(i>0&&ss[i]==='\n') i--; RD.s=Math.max(0,i); RD.playing=true; rerender(); rdSpeak(RD.s); };
 ACT.rdNextS = () => { RD.playing=true; rerender(); rdSpeak(RD.s+1); };
-ACT.rdWord = a => { RD.playing=false; stopSpeech(); rerender(); say([a.replace(/[.,!?;:«»"“”()]/g,'')]); };
+ACT.rdMode = a => { RD.mode=a; const was=RD.playing; stopSpeech(); RD.turn=false; rerender(); if(was) rdSpeak(RD.s); };
+ACT.rdWord = a => { RD.playing=false; RD.turn=false; stopSpeech(); rerender(); const w=tokNorm(a).replace(/[.,;:!?]+$/,''); if(w) speakOne(w, Math.max(.5,RD.rate-.1)); };
 ACT.rdRate = a => { RD.rate=+a; rerender(); if(RD.playing) rdSpeak(RD.s); };
 ACT.rdSize = a => { RD.size=Math.max(18,Math.min(44,RD.size+ +a)); rerender(); };
-ACT.rdType = () => { Object.assign(RD,{text:' ',title:'Mon texte',s:0,id:null,edit:true}); rerender(); RD.text=''; setTimeout(()=>$('#rd-text')?.focus(),50); };
-ACT.rdSample = () => { Object.assign(RD,{text:SAMPLE_TEXT.text,title:SAMPLE_TEXT.title,s:0,id:null,edit:false,playing:false}); rerender(); };
-ACT.rdEdit = () => { RD.playing=false; stopSpeech(); RD.edit=true; rerender(); };
-ACT.rdEditDone = () => { const t=$('#rd-text').value.trim(); RD.title=$('#rd-title').value.trim()||t.split(/\s+/).slice(0,4).join(' ')||'Mon texte'; RD.edit=false; RD.text=t; RD.s=0;
+ACT.rdType = () => { Object.assign(RD,{text:'',title:'Mon texte',s:0,id:null,edit:true,doubt:[],prevText:''}); rerender(); setTimeout(()=>$('#rd-text')?.focus(),50); };
+ACT.rdSample = () => { Object.assign(RD,{text:SAMPLE_TEXT.text,title:SAMPLE_TEXT.title,s:0,id:null,edit:false,playing:false,doubt:[]}); rerender(); };
+ACT.rdEdit = () => { RD.playing=false; stopSpeech(); RD.prevText=RD.text; RD.edit=true; rerender(); };
+ACT.rdEditCancel = () => { RD.edit=false; RD.text=RD.prevText||''; rerender(); };
+ACT.rdEditDone = () => { const t=$('#rd-text').value.trim(); RD.title=$('#rd-title').value.trim()||t.split(/\s+/).slice(0,4).join(' ')||'Mon texte'; RD.edit=false; RD.text=t; RD.s=0; RD.doubt=[];
  if(RD.id){ const ts=loadTexts(); const x=ts.find(z=>z.id===RD.id); if(x){ x.text=t; x.title=RD.title; saveTexts(ts); } } rerender(); };
-ACT.rdClose = () => { RD.playing=false; stopSpeech(); Object.assign(RD,{text:'',title:'',s:0,id:null,edit:false}); rerender(); };
+ACT.rdClose = () => { RD.playing=false; stopSpeech(); Object.assign(RD,{text:'',title:'',s:0,id:null,edit:false,doubt:[],cap:null,turn:false}); rerender(); };
 ACT.rdSave = () => { const ts=loadTexts(); const id=uid(); ts.unshift({id,title:RD.title||'Mon texte',text:RD.text,date:today()}); if(!saveTexts(ts.slice(0,40))){ toast('Mémoire pleine.'); return; } RD.id=id; toast('Texte gardé dans « Mes textes ».'); rerender(); };
-ACT.rdOpen = a => { const t=loadTexts().find(x=>x.id===a); if(t) Object.assign(RD,{text:t.text,title:t.title,s:0,id:t.id,edit:false,playing:false}); rerender(); };
+ACT.rdOpen = a => { const t=loadTexts().find(x=>x.id===a); if(t) Object.assign(RD,{text:t.text,title:t.title,s:0,id:t.id,edit:false,playing:false,doubt:[]}); rerender(); };
 ACT.rdDel = a => confirmBox('Supprimer ce texte ?', ()=>{ saveTexts(loadTexts().filter(x=>x.id!==a)); rerender(); });
-// Reconnaissance de texte (Tesseract, entièrement sur le téléphone)
-let OCR_WORKER=null;
+
+/* --- capture : chargement, rotation, recadrage --- */
+async function loadOriented(file){ let src;
+ try{ src=await createImageBitmap(file,{imageOrientation:'from-image'}); }catch(e){ src=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=URL.createObjectURL(file); }); }
+ const max=3200, sc=Math.min(1,max/Math.max(src.width,src.height)); const c=document.createElement('canvas'); c.width=Math.round(src.width*sc); c.height=Math.round(src.height*sc);
+ c.getContext('2d').drawImage(src,0,0,c.width,c.height); return c; }
+function rotateCanvas(src,deg){ const r=((deg%360)+360)%360; if(!r) return src; const c=document.createElement('canvas'); c.width=r%180?src.height:src.width; c.height=r%180?src.width:src.height;
+ const x=c.getContext('2d'); x.translate(c.width/2,c.height/2); x.rotate(r*Math.PI/180); x.drawImage(src,-src.width/2,-src.height/2); return c; }
+// Détection automatique de la page claire sur un fond plus sombre (coins extrêmes de la plus grande zone claire)
+function detectPage(cv){ const s=Math.min(1,360/Math.max(cv.width,cv.height)); const w=Math.max(8,Math.round(cv.width*s)), h=Math.max(8,Math.round(cv.height*s));
+ const t=document.createElement('canvas'); t.width=w; t.height=h; const x=t.getContext('2d'); x.drawImage(cv,0,0,w,h); const d=x.getImageData(0,0,w,h).data;
+ const g=new Uint8Array(w*h); const hist=new Array(256).fill(0); for(let i=0;i<w*h;i++){ const v=(d[i*4]*.299+d[i*4+1]*.587+d[i*4+2]*.114)|0; g[i]=v; hist[v]++; }
+ let sum=0; for(let i=0;i<256;i++) sum+=i*hist[i]; let sB=0,wB=0,best=0,th=128; for(let i=0;i<256;i++){ wB+=hist[i]; if(!wB) continue; const wF=w*h-wB; if(!wF) break; sB+=i*hist[i]; const mB=sB/wB, mF=(sum-sB)/wF, v=wB*wF*(mB-mF)**2; if(v>best){ best=v; th=i; } }
+ const lab=new Int32Array(w*h).fill(-1); let bestL=-1,bestN=0; const stack=[];
+ for(let i=0;i<w*h;i++){ if(g[i]<=th||lab[i]>=0) continue; let n=0; stack.push(i); lab[i]=i; while(stack.length){ const p=stack.pop(); n++; const px=p%w, py=(p/w)|0;
+   for(const q of [px>0?p-1:-1, px<w-1?p+1:-1, py>0?p-w:-1, py<h-1?p+w:-1]) if(q>=0&&lab[q]<0&&g[q]>th){ lab[q]=i; stack.push(q); } } if(n>bestN){ bestN=n; bestL=i; } }
+ if(bestN < w*h*0.15 || bestN > w*h*0.97) return null;
+ let c=[[0,0,Infinity],[0,0,-Infinity],[0,0,-Infinity],[0,0,Infinity]]; // tl (min x+y), tr (max x−y), br (max x+y), bl (min x−y)
+ for(let i=0;i<w*h;i++){ if(lab[i]!==bestL) continue; const px=i%w, py=(i/w)|0;
+  if(px+py<c[0][2]) c[0]=[px,py,px+py]; if(px-py>c[1][2]) c[1]=[px,py,px-py]; if(px+py>c[2][2]) c[2]=[px,py,px+py]; if(px-py<c[3][2]) c[3]=[px,py,px-py]; }
+ return c.map(([px,py])=>[Math.min(1,Math.max(0,(px+.5)/w)), Math.min(1,Math.max(0,(py+.5)/h))]); }
+const FULL_Q = () => [[.03,.03],[.97,.03],[.97,.97],[.03,.97]];
+function capSetView(){ const c=RD.cap; c.view=rotateCanvas(c.src,c.rot); c.q=detectPage(c.view)||FULL_Q(); c.auto=c.q; }
+function capDraw(){ const c=RD.cap, st=$('#cap-stage'), cv=$('#cap-cv'), svg=$('#cap-svg'); if(!st||!c) return;
+ const maxH=Math.round(innerHeight*0.58), W0=st.parentElement.clientWidth; let sc=W0/c.view.width; if(c.view.height*sc>maxH) sc=maxH/c.view.height;
+ const w=Math.round(c.view.width*sc), h=Math.round(c.view.height*sc); st.style.width=w+'px'; st.style.height=h+'px'; cv.width=w; cv.height=h; cv.getContext('2d').drawImage(c.view,0,0,w,h);
+ svg.setAttribute('viewBox',`0 0 ${w} ${h}`); svg.setAttribute('width',w); svg.setAttribute('height',h);
+ const P=c.q.map(([x,y])=>[x*w,y*h]); const poly=P.map(p=>p.join(',')).join(' ');
+ svg.innerHTML=`<path d="M0 0H${w}V${h}H0Z M${P.map(p=>p.join(' ')).join(' L')} Z" fill="rgba(10,14,35,.5)" fill-rule="evenodd"/><polygon points="${poly}" fill="none" stroke="#3B82F6" stroke-width="3"/>`+
+  P.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="22" fill="rgba(59,130,246,.25)" data-h="${i}"/><circle cx="${p[0]}" cy="${p[1]}" r="9" fill="#3B82F6" stroke="#fff" stroke-width="3" pointer-events="none"/>`).join('');
+ if(!svg._bound){ svg._bound=true; let drag=-1;
+  const pos=e=>{ const r=svg.getBoundingClientRect(); return [Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)), Math.min(1,Math.max(0,(e.clientY-r.top)/r.height))]; };
+  svg.addEventListener('pointerdown',e=>{ const p=pos(e); let bi=-1,bd=1e9; RD.cap.q.forEach((q,i)=>{ const dd=(q[0]-p[0])**2*(svg.clientWidth**2)+(q[1]-p[1])**2*(svg.clientHeight**2); if(dd<bd){ bd=dd; bi=i; } }); if(bd<60*60){ drag=bi; svg.setPointerCapture(e.pointerId); e.preventDefault(); } });
+  svg.addEventListener('pointermove',e=>{ if(drag<0) return; RD.cap.q[drag]=pos(e); capDraw(); });
+  const up=()=>{ drag=-1; }; svg.addEventListener('pointerup',up); svg.addEventListener('pointercancel',up); } }
+ACT.capRot = a => { RD.cap.rot+= +a; capSetView(); rerender(); };
+ACT.capFull = () => { RD.cap.q=FULL_Q(); capDraw(); };
+ACT.capAuto = () => { RD.cap.q=detectPage(RD.cap.view)||FULL_Q(); capDraw(); if(!detectPage(RD.cap.view)) toast('Page non trouvée : place les coins à la main.'); };
+ACT.capCancel = () => { RD.cap=null; rerender(); };
+ACT.capGo = () => { const c=RD.cap; RD.cap=null; runOcr(c.view, c.q); };
+
+/* --- traitement de l'image --- */
+const ocrCfg = () => Object.assign({minSide:2600, maxSide:3000, maxUp:3, k:0.25, psm:'3'}, window.__OCRCFG||{});
+function homography(src, dst){ // dst (rectangle) → src (quadrilatère)
+ const A=[], B=[]; for(let i=0;i<4;i++){ const [u,v]=dst[i], [x,y]=src[i]; A.push([u,v,1,0,0,0,-x*u,-x*v]); B.push(x); A.push([0,0,0,u,v,1,-y*u,-y*v]); B.push(y); }
+ for(let c=0;c<8;c++){ let p=c; for(let r=c+1;r<8;r++) if(Math.abs(A[r][c])>Math.abs(A[p][c])) p=r; [A[c],A[p]]=[A[p],A[c]]; [B[c],B[p]]=[B[p],B[c]];
+  for(let r=0;r<8;r++){ if(r===c) continue; const f=A[r][c]/A[c][c]; for(let k=c;k<8;k++) A[r][k]-=f*A[c][k]; B[r]-=f*B[c]; } }
+ return B.map((b,i)=>b/A[i][i]); }
+function warpToGray(view, q){ const W0=view.width, H0=view.height; const cx=q.reduce((a,p)=>a+p[0],0)/4, cy=q.reduce((a,p)=>a+p[1],0)/4; // marge de sécurité : on agrandit un peu le cadre pour ne pas couper les lettres
+ const Q=q.map(([x,y])=>[Math.min(W0-1,Math.max(0,(cx+(x-cx)*1.04)*W0)), Math.min(H0-1,Math.max(0,(cy+(y-cy)*1.04)*H0))]); const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+ let W=Math.max(dist(Q[0],Q[1]),dist(Q[3],Q[2])), H=Math.max(dist(Q[0],Q[3]),dist(Q[1],Q[2])); const m=Math.max(W,H);
+ const C_=ocrCfg(); const s=Math.min(C_.maxSide/m, Math.max(1, Math.min(C_.maxUp, C_.minSide/m))); W=Math.round(W*s); H=Math.round(H*s);
+ const src=view.getContext('2d').getImageData(0,0,W0,H0).data; const g0=new Uint8ClampedArray(W0*H0); for(let i=0;i<W0*H0;i++) g0[i]=(src[i*4]*.299+src[i*4+1]*.587+src[i*4+2]*.114);
+ const h=homography(Q,[[0,0],[W,0],[W,H],[0,H]]); const out=new Uint8ClampedArray(W*H);
+ for(let v=0;v<H;v++){ for(let u=0;u<W;u++){ const z=h[6]*u+h[7]*v+1, x=(h[0]*u+h[1]*v+h[2])/z, y=(h[3]*u+h[4]*v+h[5])/z;
+   const x0=x|0, y0=y|0; if(x0<0||y0<0||x0>=W0-1||y0>=H0-1){ out[v*W+u]=255; continue; } const fx=x-x0, fy=y-y0, i=y0*W0+x0;
+   out[v*W+u]=(g0[i]*(1-fx)+g0[i+1]*fx)*(1-fy)+(g0[i+W0]*(1-fx)+g0[i+W0+1]*fx)*fy; } }
+ return {g:out, W, H}; }
+function flattenLight(g,W,H){ // enlève les ombres : divise par le fond estimé (flou très large)
+ const sc=8, w=Math.ceil(W/sc), h=Math.ceil(H/sc), small=new Float32Array(w*h);
+ for(let y=0;y<h;y++) for(let x=0;x<w;x++){ let mx=0; for(let yy=y*sc;yy<Math.min(H,y*sc+sc);yy++) for(let xx=x*sc;xx<Math.min(W,x*sc+sc);xx++){ const v=g[yy*W+xx]; if(v>mx) mx=v; } small[y*w+x]=mx; }
+ const blur=(a,r)=>{ const o=new Float32Array(w*h); for(let y=0;y<h;y++){ let acc=0,n=0; for(let x=-r;x<w+r;x++){ if(x+r<w){ acc+=a[y*w+x+r]; n++; } if(x-r-1>=0){ acc-=a[y*w+x-r-1]; n--; } if(x>=0&&x<w) o[y*w+x]=acc/n; } }
+  const o2=new Float32Array(w*h); for(let x=0;x<w;x++){ let acc=0,n=0; for(let y=-r;y<h+r;y++){ if(y+r<h){ acc+=o[(y+r)*w+x]; n++; } if(y-r-1>=0){ acc-=o[(y-r-1)*w+x]; n--; } if(y>=0&&y<h) o2[y*w+x]=acc/n; } } return o2; };
+ const bg=blur(blur(small,4),4); const out=new Uint8ClampedArray(W*H);
+ for(let y=0;y<H;y++){ const sy=Math.min(h-1,(y/sc)|0); for(let x=0;x<W;x++){ const b=bg[sy*w+Math.min(w-1,(x/sc)|0)]||255; out[y*W+x]=Math.min(255, g[y*W+x]/Math.max(30,b)*255); } }
+ const hist=new Uint32Array(256); for(const v of out) hist[v]++; let lo=0,hi=255,c=0; const n=W*H; for(let i=0;i<256;i++){ c+=hist[i]; if(c>n*.01){ lo=i; break; } } c=0; for(let i=255;i>=0;i--){ c+=hist[i]; if(c>n*.4){ hi=i; break; } }
+ const span=Math.max(40,hi-lo); for(let i=0;i<n;i++) out[i]=Math.max(0,Math.min(255,(out[i]-lo)*255/span)); return out; }
+function sauvola(g,W,H){ const r=Math.max(12,Math.round(Math.min(W,H)/40)), I=new Float64Array((W+1)*(H+1)), I2=new Float64Array((W+1)*(H+1));
+ for(let y=1;y<=H;y++){ let s=0,s2=0; for(let x=1;x<=W;x++){ const v=g[(y-1)*W+x-1]; s+=v; s2+=v*v; I[y*(W+1)+x]=I[(y-1)*(W+1)+x]+s; I2[y*(W+1)+x]=I2[(y-1)*(W+1)+x]+s2; } }
+ const out=new Uint8ClampedArray(W*H), k=ocrCfg().k, R=128;
+ for(let y=0;y<H;y++){ const y1=Math.max(0,y-r), y2=Math.min(H,y+r+1); for(let x=0;x<W;x++){ const x1=Math.max(0,x-r), x2=Math.min(W,x+r+1), n=(x2-x1)*(y2-y1);
+   const a=y2*(W+1)+x2, b=y1*(W+1)+x2, c=y2*(W+1)+x1, d=y1*(W+1)+x1; const m=(I[a]-I[b]-I[c]+I[d])/n, v=(I2[a]-I2[b]-I2[c]+I2[d])/n-m*m;
+   out[y*W+x]= g[y*W+x] > m*(1+k*(Math.sqrt(Math.max(0,v))/R-1)) ? 255 : 0; } }
+ return out; }
+function grayCanvas(g,W,H){ const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d'); const im=x.createImageData(W,H); for(let i=0;i<W*H;i++){ const v=g[i]; im.data[i*4]=im.data[i*4+1]=im.data[i*4+2]=v; im.data[i*4+3]=255; } x.putImageData(im,0,0); return c; }
+function prepareForOcr(view,q){ const {g,W,H}=warpToGray(view,q); const flat=flattenLight(g,W,H); return { flat:grayCanvas(flat,W,H), bin:grayCanvas(sauvola(flat,W,H),W,H) }; }
+
+/* --- correction orthographique après la reconnaissance (dictionnaire français, 336 000 formes) --- */
+let FR_DICT=null;
+const stripAcc = w => w.normalize('NFD').replace(/[̀-ͯ]/g,'');
+async function loadDict(){ if(FR_DICT) return FR_DICT; if(!window.DecompressionStream) return null;
+ const r=await fetch('lib/ocr/lang/fr-words.txt.gz'); if(!r.ok) return null;
+ const txt=await new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).text();
+ const set=new Set(), strip=new Map(); for(const w of txt.split('\n')){ if(!w) continue; set.add(w); const k=stripAcc(w); const a=strip.get(k); if(a===undefined) strip.set(k,w); else if(typeof a==='string'){ if(a!==w) strip.set(k,[a,w]); } else if(!a.includes(w)) a.push(w); }
+ FR_DICT={set,strip}; return FR_DICT; }
+const CONFUSE = new Set(['ce','ec','il','li','nu','un','gq','qg','ao','oa','mn','nm','tf','ft','ij','ji','rt','tr','hb','bh','cs','sc','ae','ea','oe','eo','uv','vu']);
+function stripLookup(d,k){ const a=d.strip.get(k); return a===undefined?[]:typeof a==='string'?[a]:a; }
+function spellCandidates(d, lc){
+ const acc=stripLookup(d, stripAcc(lc)); if(acc.length===1) return {w:acc[0], cost:.3};
+ if(acc.length>1){ // plusieurs accents possibles : on garde celui qui ressemble le plus
+  let best=null, bc=1e9; for(const w of acc){ let c=0; for(let i=0;i<Math.max(w.length,lc.length);i++){ const a=w[i]||'', b=lc[i]||''; if(a===b) continue; c += (a!==stripAcc(a) && b!==stripAcc(b)) ? .5 : 1; } if(c<bc){ bc=c; best=w; } else if(c===bc) best=null; } return best?{w:best,cost:.4}:null; }
+ const s=stripAcc(lc); if(s.length<5) return null; const AL='abcdefghijklmnopqrstuvwxyz-'; const found=new Map();
+ const add=(v,cost)=>{ for(const w of stripLookup(d,v)){ const c=found.get(w); if(c===undefined||cost<c) found.set(w,cost); } };
+ for(let i=0;i<=s.length;i++){
+  if(i<s.length){ add(s.slice(0,i)+s.slice(i+1), 1); for(const ch of AL) if(ch!==s[i]) add(s.slice(0,i)+ch+s.slice(i+1), CONFUSE.has(s[i]+ch)?.6:1); }
+  if(i<s.length-1) add(s.slice(0,i)+s[i+1]+s[i]+s.slice(i+2), .8);
+  for(const ch of AL) add(s.slice(0,i)+ch+s.slice(i), 1); }
+ const m=s.replace(/rn/g,'m').replace(/cl/g,'d'); if(m!==s) add(m,.5);
+ if(!found.size) return null; let best=null, bc=1e9, tie=false; for(const [w,c] of found){ if(c<bc){ bc=c; best=w; tie=false; } else if(c===bc) tie=true; }
+ return tie ? null : {w:best, cost:bc}; }
+function spellFix(text, d){ const unknown=[];
+ const out = text.replace(/(^|[\s«(\n])([\p{L}][\p{L}’'-]*)(?=$|[^\p{L}’'-])/gu, (all, pre, word, off, str) => {
+  const parts=word.split(/(’|')/); const core=parts[parts.length-1]; if(!core) return all; const lc=core.toLowerCase();
+  if(d.set.has(lc) || core.length<2) return all;
+  const before=str.slice(0,off).replace(/\s+$/,''); const sentStart=!before || /[.!?…:»]$/.test(before);
+  const cap=core[0]!==core[0].toLowerCase(); if(cap && !sentStart){ return all; }          // nom propre : on n’y touche pas
+  if(core===core.toUpperCase() && core.length>1) return all;                                  // sigle
+  const c=spellCandidates(d, lc); if(!c){ unknown.push(core); return all; }
+  let fixed=c.w; if(cap) fixed=fixed[0].toUpperCase()+fixed.slice(1); parts[parts.length-1]=fixed; return pre+parts.join(''); });
+ // « mot, Majuscule » est presque toujours une fin de phrase mal lue
+ const out2 = out.replace(/([\p{Ll}]),\s+(\p{Lu}\p{Ll}+)/gu, (m,a,b)=> d.set.has(b.toLowerCase()) ? `${a}. ${b}` : m);
+ return {text:out2, unknown}; }
+
+/* --- reconnaissance (Tesseract, entièrement sur le téléphone) --- */
+let OCR_WORKER=null, OCR_PROG=null;
 const absUrl = p => new URL(p, location.href).href;
-async function getOcr(onProg){ if(OCR_WORKER) return OCR_WORKER;
+async function getOcr(){ if(OCR_WORKER) return OCR_WORKER;
  await loadScript('lib/ocr/tesseract.min.js'); if(!window.Tesseract) throw new Error('module absent');
- OCR_WORKER = await Tesseract.createWorker('fra', 1, { workerPath:absUrl('lib/ocr/worker.min.js'), corePath:absUrl('lib/ocr/core'), langPath:absUrl('lib/ocr/lang'), gzip:true, logger:m=>onProg&&onProg(m) });
+ OCR_WORKER = await Tesseract.createWorker('fra', 1, { workerPath:absUrl('lib/ocr/worker.min.js'), corePath:absUrl('lib/ocr/core'), langPath:absUrl('lib/ocr/lang'), gzip:true, logger:m=>OCR_PROG&&OCR_PROG(m) });
+ await OCR_WORKER.setParameters({ tessedit_pageseg_mode:ocrCfg().psm, preserve_interword_spaces:'1', user_defined_dpi:'300' });
  return OCR_WORKER; }
-async function prepImage(file){ let bmp; try{ bmp=await createImageBitmap(file,{imageOrientation:'from-image'}); }catch(e){ bmp=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=URL.createObjectURL(file); }); }
- const max=2000, sc=Math.min(1,max/Math.max(bmp.width,bmp.height)); const c=document.createElement('canvas'); c.width=Math.round(bmp.width*sc); c.height=Math.round(bmp.height*sc);
- const x=c.getContext('2d'); x.filter='grayscale(1) contrast(1.35)'; x.drawImage(bmp,0,0,c.width,c.height); return c; }
-async function runOcr(file){ RD.ocr={p:0,st:'Préparation de la photo…'}; rerender();
- try{ const canvas=await prepImage(file); RD.ocr.img=canvas.toDataURL('image/jpeg',.6); rerender();
-  const label={ 'loading tesseract core':'Chargement du lecteur…', 'initializing tesseract':'Démarrage…', 'loading language traineddata':'Chargement du français…', 'initializing api':'Démarrage…', 'recognizing text':'Je lis les mots…' };
-  const w=await getOcr(m=>{ if(!RD.ocr) return; RD.ocr.st=label[m.status]||m.status; RD.ocr.p=m.status==='recognizing text'?m.progress:Math.min(.15,(m.progress||0)*.15); const b=$('#ocr-bar'), s=$('#ocr-st'); if(b) b.style.width=Math.round(RD.ocr.p*100)+'%'; if(s) s.textContent=RD.ocr.st; });
-  const { data } = await w.recognize(canvas); const text=cleanOcr(data.text||'');
-  RD.ocr=null; if(text.replace(/\W/g,'').length<3){ toast('Je n’ai pas trouvé de texte. Reprends la photo plus près, avec plus de lumière.',4000); rerender(); return; }
-  Object.assign(RD,{text, title:text.split(/\s+/).slice(0,4).join(' '), s:0, id:null, edit:false, playing:false}); rerender(); sfxGood(); toast(data.confidence<60?'Texte trouvé. Vérifie-le avec « Corriger ».':'Texte trouvé ! Touche ▶ Lire.',3500); }
- catch(e){ RD.ocr=null; rerender(); toast(window.JAL_PWA?'La lecture de la photo a échoué. Réessaie avec Internet la première fois.':'La lecture de photos marche dans l’application installée. Ici, utilise « Écrire ou coller un texte ».',4500); } }
-ACT.ocrPrefetch = async () => { const files=['lib/ocr/tesseract.min.js','lib/ocr/worker.min.js','lib/ocr/core/tesseract-core-simd-lstm.wasm.js','lib/ocr/core/tesseract-core-lstm.wasm.js','lib/ocr/lang/fra.traineddata.gz'];
+function ocrWords(d){ const out=[]; (d.blocks||[]).forEach(b=>(b.paragraphs||[]).forEach(p=>(p.lines||[]).forEach(l=>(l.words||[]).forEach(w=>out.push(w))))); return out; }
+async function recognizeBest(prep, onStage){ const w=await getOcr(); const opts={}, out={text:true, blocks:true};
+ onStage(0); const r1=(await w.recognize(prep.bin, opts, out)).data; if(r1.confidence>=85) return r1;
+ onStage(1); const r2=(await w.recognize(prep.flat, opts, out)).data; return r2.confidence>r1.confidence ? r2 : r1; }
+async function ocrPipeline(view,q,onProg){ onProg('Redressement et nettoyage de la photo…',0.02); await wait(30);
+ const prep=prepareForOcr(view,q); let stage=0;
+ const label={ 'loading tesseract core':'Chargement du lecteur…', 'initializing tesseract':'Démarrage…', 'loading language traineddata':'Chargement du français…', 'initializing api':'Démarrage…', 'recognizing text':'Je lis les mots…' };
+ OCR_PROG = m => onProg(stage===1&&m.status==='recognizing text'?'Deuxième lecture pour plus de précision…':(label[m.status]||m.status), m.status==='recognizing text' ? 0.15+0.85*((stage+m.progress)/2) : Math.min(.15,(m.progress||0)*.15));
+ const dictP=loadDict().catch(()=>null);
+ const data=await recognizeBest(prep, s=>{ stage=s; }); OCR_PROG=null;
+ onProg('Vérification des mots…',0.99); let text=cleanOcr(data.text||''); let unknown=[];
+ const dict=await dictP; if(dict){ const r=spellFix(text,dict); text=r.text; unknown=r.unknown; }
+ const low=ocrWords(data).filter(w=>w.confidence<40 && !(dict&&dict.set.has(w.text.replace(/[^\p{L}’'-]/gu,'').toLowerCase())) && /\p{L}{2,}/u.test(w.text)).map(w=>w.text.replace(/[^\p{L}’'-]/gu,'').replace(/'/g,'’'));
+ const present=new Set(text.split(/[^\p{L}’'-]+/u)); const doubt=[...new Set([...unknown, ...low])].filter(w=>w&&present.has(w));
+ return { text, conf:data.confidence, doubt, preview:prep.bin }; }
+window.__ocrBench = async file => { const v=await loadOriented(file); const q=detectPage(v)||FULL_Q(); const r=await ocrPipeline(v,q,()=>{}); return {text:r.text, conf:r.conf, q}; };
+async function runOcr(view,q){ RD.ocr={p:0,st:'Préparation de la photo…'}; rerender();
+ try{ const r=await ocrPipeline(view,q,(st,p)=>{ if(!RD.ocr) return; RD.ocr.st=st; RD.ocr.p=p; const b=$('#ocr-bar'), s=$('#ocr-st'); if(b) b.style.width=Math.round(p*100)+'%'; if(s) s.textContent=st; });
+  RD.ocr=null; if(r.text.replace(/\W/g,'').length<3){ toast('Je n’ai pas trouvé de texte. Reprends la photo plus près, avec plus de lumière.',4000); rerender(); return; }
+  Object.assign(RD,{text:r.text, title:r.text.split(/\s+/).slice(0,4).join(' '), s:0, id:null, edit:false, playing:false, doubt:r.doubt}); rerender(); sfxGood();
+  toast(r.conf<70?'Texte trouvé. Vérifie les mots soulignés avec « Corriger ».':'Texte trouvé ! Touche ▶ Lire.',3500); }
+ catch(e){ OCR_PROG=null; RD.ocr=null; rerender(); toast(window.JAL_PWA?'La lecture de la photo a échoué. Réessaie (Internet nécessaire la première fois).':'La lecture de photos marche dans l’application installée. Ici, utilise « Écrire ou coller un texte ».',4500); } }
+async function startCapture(file){ try{ const src=await loadOriented(file); RD.cap={src, rot:0}; capSetView(); rerender(); }catch(e){ toast('Impossible d’ouvrir cette image.'); } }
+ACT.ocrPrefetch = async () => { const files=['lib/ocr/lang/fr-words.txt.gz','lib/ocr/tesseract.min.js','lib/ocr/worker.min.js','lib/ocr/core/tesseract-core-simd-lstm.wasm.js','lib/ocr/core/tesseract-core-lstm.wasm.js','lib/ocr/lang/fra.traineddata.gz'];
  toast('Téléchargement du lecteur de photos…',6000); try{ for(const f of files){ const r=await fetch(f); if(!r.ok) throw 0; await r.arrayBuffer(); } toast('✅ La lecture de photos marche maintenant sans Internet.',4000); }catch(e){ toast('Téléchargement impossible. Vérifiez Internet.'); } };
 
 /* ----- Ma progression (enfant) ----- */
@@ -1468,7 +1653,7 @@ SCREENS.settings = () => `${topbar('Paramètres')}<div class="stack fade-in">
  <div class="card stack"><b>Voix</b><p class="note">${!hasTTS?'La synthèse vocale n’est pas disponible sur cet appareil. Ajoutez des fichiers audio dans l’administration.':VOICE?`Voix utilisée : ${esc(VOICE.name)}`:'Aucune voix française trouvée. Sur Android : Paramètres → Synthèse vocale → installez la voix « Français » (elle fonctionne ensuite sans Internet).'}</p><button class="btn btn-listen small" data-act="testVoice">🔊 Tester la voix</button></div>
  <div class="card stack" id="offline-box"><b>Hors ligne</b><p class="note">…</p></div>
  ${isStandalone()?'':`<button class="btn" style="--c:var(--ink)" data-act="install">📲 Installer l’application</button>`}
- ${window.JAL_PWA?`<button class="btn ghost" data-act="ocrPrefetch">📷 Préparer la lecture de photos hors ligne (4 Mo)</button>`:''}
+ ${window.JAL_PWA?`<button class="btn ghost" data-act="ocrPrefetch">📷 Préparer la lecture de photos hors ligne (5 Mo)</button>`:''}
  <button class="btn ghost" data-act="go" data-arg="profiles">👤 Changer d’apprenant</button>
  ${window.JAL_PWA?`<button class="btn ghost" data-act="lockDevice">🔒 Verrouiller cet appareil</button>`:''}
  <button class="btn" style="--c:var(--grape)" data-act="pin" data-arg="parent">👪 Espace parent / enseignant</button>
@@ -1479,6 +1664,7 @@ ACT.setCase = a => { S.caseMode=a; saveSettings(); rerender(); };
 ACT.setGoal = a => { S.dailyGoal=+a; saveSettings(); rerender(); };
 ACT.testVoice = () => say(['Bonjour ! A, comme avion. Ma, man : maman.']);
 const CHANGE = {};
+CHANGE.setVoice = el => { S.voiceName=el.value; saveSettings(); pickVoice(); toast('Voix : '+el.value); if(RD.playing) rdSpeak(RD.s); };
 CHANGE.setLang = el => { const l=LANGS.find(x=>x.id===el.value); if(!l?.ready){ toast('Cette langue arrive bientôt.'); el.value=S.contentLang; return; } setLang(l.id); toast('Langue : '+l.label); };
 function setLang(id){ saveProg(); stopSpeech(); Object.keys(URLS).forEach(k=>{ URL.revokeObjectURL(URLS[k]); delete URLS[k]; }); S.contentLang=id; saveSettings(); C=loadContent(); P=loadProgress(S.profile); SERVER_AUDIO={}; applyLangAttrs(); loadServerAudio(); rerender(); }
 ACT.quickLang = () => { const ready=LANGS.filter(l=>l.ready); const i=ready.findIndex(l=>l.id===S.contentLang); const nx=ready[(i+1)%ready.length]; setLang(nx.id); toast('Langue : '+nx.label); };
@@ -1697,7 +1883,7 @@ ACT.syncPush = async () => { S.sync={url:$('#sb-url').value.trim(),key:$('#sb-ke
 /* ---------- événements globaux ---------- */
 document.addEventListener('click', e => { const el=e.target.closest('[data-act]'); if(!el||el.disabled) return; const fn=ACT[el.dataset.act]; if(fn){ e.preventDefault(); fn(el.dataset.arg, el, e); } });
 document.addEventListener('change', e => { const el=e.target;
- if(el.dataset.ocr){ const f=el.files&&el.files[0]; el.value=''; if(f) runOcr(f); return; }
+ if(el.dataset.ocr){ const f=el.files&&el.files[0]; el.value=''; if(f) startCapture(f); return; }
  if(el.dataset.actChange){ const [n,arg]=el.dataset.actChange.split(':'); CHANGE[n]&&CHANGE[n](el,arg); return; }
  if(el.dataset.edit){ let v = el.type==='checkbox'?el.checked:el.value.trim(); if(el.dataset.upper) v=v.toUpperCase(); if(el.dataset.split) v=v.split('-').map(s=>s.trim()).filter(Boolean);
   if(el.dataset.edit.endsWith('.syl')) { const i=+el.dataset.edit.split('.')[1]; v=v.map(s=>s.toUpperCase()); C.words[i].w=v.join(''); }

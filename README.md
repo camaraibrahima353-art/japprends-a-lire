@@ -89,11 +89,15 @@ Chaque leçon : tableau de conjugaison (terminaisons en couleur, 🔊 sur chaque
 - Une erreur → « Essaie encore » ; deuxième erreur → la bonne réponse est affichée et lue. Résultats dans l'espace parent (tables réussies, niveaux, record).
 
 ## Lire un texte (bouton 📷 sur l'accueil)
-- Prendre une photo d'une page (ou choisir une image) : le texte est reconnu **sur le téléphone, sans Internet** (Tesseract, français), puis lu à voix haute.
-- Lecture phrase par phrase, la phrase lue est surlignée et le mot prononcé aussi (si la voix du téléphone le permet) ; ⏮ ⏭, vitesse lente / normale / rapide, taille du texte A− / A+, toucher un mot pour l'entendre.
-- ✏️ Corriger le texte reconnu, 💾 le garder dans « Mes textes », ou ⌨️ écrire / coller un texte.
-- Le module de lecture de photos (≈ 4 Mo) se télécharge à la première utilisation, ou d'avance : Paramètres → « Préparer la lecture de photos hors ligne ».
-- Marche avec du texte imprimé. L'écriture à la main est mal reconnue.
+- **Photo → recadrage** : la page est trouvée automatiquement sur la photo, les 4 coins bleus se déplacent au doigt, boutons ↺ ↻ pour tourner, ✨ Auto, ⛶ Tout.
+- **Préparation de l'image** : redressement de la perspective (photo prise de biais), suppression des ombres, contraste, binarisation adaptative (Sauvola), agrandissement des petits caractères.
+- **Reconnaissance sur le téléphone, sans Internet** (Tesseract, français, modèle « best ») avec une deuxième lecture si la première est peu sûre, puis **correction orthographique** avec un dictionnaire de 336 000 mots français (accents, lettres confondues, « rn » → « m », virgule lue au lieu d'un point).
+- Les mots encore douteux sont **soulignés en orange** ; ✏️ Corriger pour les modifier.
+- Précision mesurée sur des photos de test (page de biais, ombre, flou) : **9,7 % → 2,7 % d'erreurs par caractère**.
+- **3 façons de lire** : ▶ Lecture (phrase par phrase, mot prononcé surligné, pauses entre phrases et paragraphes), 🗣️ Écoute et répète (l'application lit une phrase puis laisse l'enfant la relire), 🔤 Mot à mot. Vitesse lent / normal / rapide, taille du texte, choix de la voix française du téléphone, toucher un mot pour l'entendre.
+- Découpage des phrases qui respecte « M. », « Mme », « etc. » et les guillemets « … ».
+- 💾 Garder dans « Mes textes », ⌨️ écrire ou coller un texte.
+- Le module photo (≈ 5 Mo) se télécharge à la première utilisation, ou d'avance : Paramètres → « Préparer la lecture de photos hors ligne ».
 
 ## Accès privé
 L'application installée demande un **code d'accès** au premier lancement sur chaque appareil (le code n'est pas dans ce dépôt, seule son empreinte SHA-256 y est ; il respecte les majuscules et les symboles). Paramètres → « Verrouiller cet appareil » pour le redemander.
