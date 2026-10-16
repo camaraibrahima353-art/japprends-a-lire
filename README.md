@@ -95,11 +95,11 @@ Chaque leçon : tableau de conjugaison (terminaisons en couleur, 🔊 sur chaque
 - Le module de lecture de photos (≈ 4 Mo) se télécharge à la première utilisation, ou d'avance : Paramètres → « Préparer la lecture de photos hors ligne ».
 - Marche avec du texte imprimé. L'écriture à la main est mal reconnue.
 
+## Accès privé
+L'application installée demande un **code d'accès** au premier lancement sur chaque appareil (le code n'est pas dans ce dépôt, seule son empreinte SHA-256 y est). Paramètres → « Verrouiller cet appareil » pour le redemander.
+
 ## Langues
-- **Français** (alphabet latin).
-- **Maninka en N’Ko (ߒߞߏ)** : 7 voyelles, ߒ et 20 consonnes, syllabes (familles ߓ ߕ ߘ ߞ ߟ ߡ), 12 mots, 4 petites phrases, écriture de droite à gauche, police Noto Sans NKo incluse. Changer de langue : bouton 🌍 sur l’accueil ou Paramètres. Chaque langue a sa propre progression.
-  - Les mots sont écrits **sans signes de ton** : à faire vérifier par un maître N’Ko (modifiables dans Administration).
-  - Il n’existe pas de voix de synthèse maninka : en secours, le téléphone lit une transcription avec la voix française. **Enregistrez la vraie voix** dans Administration → 🎙 Voix (avec la langue N’Ko choisie) ; l’export crée `audio/emk-nkoo/`.
+- **Français** (alphabet latin). D'autres langues pourront être ajoutées.
 
 ## Ajouter une langue
 Dupliquer `CONTENT_PACKS.fr` en `CONTENT_PACKS.ff` (par ex.), traduire lettres/mots/phrases, passer `ready:true` dans `LANGS`.

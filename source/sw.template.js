@@ -3,7 +3,7 @@
    pour un fonctionnement complet sans Internet. */
 const VERSION = 'jal-__VERSION__';
 const CORE = __CORE__;
-const LANGS = ['fr','emk-nkoo'];
+const LANGS = ['fr'];
 
 async function cacheAudio(cache){
   for(const lang of LANGS){
