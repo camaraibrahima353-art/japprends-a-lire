@@ -13,7 +13,7 @@
 <style>@font-face{font-family:'Andika';font-weight:400;font-display:swap;src:url(fonts/andika-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Andika';font-weight:400;font-display:swap;src:url(fonts/andika-latin-ext-400-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:'Andika';font-weight:700;font-display:swap;src:url(fonts/andika-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Andika';font-weight:700;font-display:swap;src:url(fonts/andika-latin-ext-700-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:'Baloo 2';font-weight:500;font-display:swap;src:url(fonts/baloo-2-latin-500-normal.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-weight:600;font-display:swap;src:url(fonts/baloo-2-latin-600-normal.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-weight:700;font-display:swap;src:url(fonts/baloo-2-latin-700-normal.woff2) format('woff2')}@font-face{font-family:'Baloo 2';font-weight:800;font-display:swap;src:url(fonts/baloo-2-latin-800-normal.woff2) format('woff2')}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} body{margin:0} img{max-width:100%} [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%} body{overscroll-behavior-y:contain;user-select:none;-webkit-user-select:none} input,textarea{user-select:text;-webkit-user-select:text}</style>
-<script>window.JAL_PWA=true;window.JAL_VERSION='2026.10.16-2047-c570fc';</script>
+<script>window.JAL_PWA=true;window.JAL_VERSION='2026.10.16-2104-c90a41';</script>
 <title>J’apprends à lire</title>
 <meta name="theme-color" content="#2446B8">
 <style>
@@ -243,6 +243,12 @@ h1,h2,h3{margin:0;text-wrap:balance;line-height:1.1}
 .pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:10px;font-size:22px;display:grid;place-items:center}
 .pw-check{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:24px}.pw-check span{font-size:13px;padding:2px 8px;border-radius:999px;background:var(--card);border:1px solid var(--edge);color:var(--muted)}
 .pw-check .warn{color:var(--bad);border-color:var(--bad)}
+.sess{padding:8px 10px;border-radius:12px;background:var(--paper);border:1px solid var(--edge);margin-top:6px}.sess.live{border-color:var(--good);background:var(--good-bg)}
+.live-dot{color:var(--good);font-weight:800;font-size:14px}.live-dot::before{content:"● ";animation:pulse 1.2s infinite}
+.day.good{border-left:6px solid var(--good)}.day.warn{border-left:6px solid var(--warn)}.day.bad{border-left:6px solid var(--bad)}.day-status{font-weight:700;margin-top:4px}
+.sched{display:flex;flex-direction:column;gap:8px}.sched-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;background:var(--card);border:2px solid var(--edge)}
+.sched-row.on{border-color:var(--leaf)}.sched-row input[type=time]{width:auto;min-width:0;padding:6px 8px}.sched-row input[type=checkbox]{width:22px;height:22px}
+.sel-li{border-color:var(--ink)!important;background:color-mix(in srgb,var(--ink) 10%,var(--card))!important}
 .dict-slots{gap:6px}.dict-slots .slot{min-width:44px;height:58px;font-size:30px;padding:0 6px;border-radius:12px}
 .dict-slots.syl .slot{min-width:72px;height:66px;font-size:30px}.dict-slots.word .slot{min-width:64px;height:54px;font-size:22px}
 .slot.good{border-color:var(--good);background:var(--good-bg);color:var(--good)}.slot.bad{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
@@ -617,7 +623,7 @@ const passedCount = () => LEVELS.filter(l=>P.levels[l.id]?.passed).length;
 function streak(){ let n=0; const d=new Date(); const active=k=>{ const x=P.daily[k]; return x&&(x.ex>0||x.learned>0); };
   if(!active(dayKey(d))) d.setDate(d.getDate()-1);
   while(active(dayKey(d))){ n++; d.setDate(d.getDate()-1); } return n; }
-function record(key, ok){ const it=P.items[key]||(P.items[key]={ok:0,ko:0}); ok?it.ok++:it.ko++; it.last=ok?1:0; it.at=Date.now();
+function record(key, ok){ try{ trackExercise(ok); }catch(e){} const it=P.items[key]||(P.items[key]={ok:0,ko:0}); ok?it.ok++:it.ko++; it.last=ok?1:0; it.at=Date.now();
   if(ok){ P.ok++; P.points+=10; const d=day(); d.correct++; d.ex++; if(d.correct===S.dailyGoal){ setTimeout(()=>{ toast('🎯 Objectif du jour atteint ! Bravo !'); },900); award('goal'); } award('first'); if(it.ok>=2&&it.last) delete P.review[key]; }
   else { P.ko++; day().ex++; P.review[key]=1; }
   checkBadges(); saveProg(); }
@@ -1603,6 +1609,190 @@ async function startCapture(file){ try{ const src=await loadOriented(file); RD.c
 ACT.ocrPrefetch = async () => { const files=['lib/ocr/lang/fr-words.txt.gz','lib/ocr/tesseract.min.js','lib/ocr/worker.min.js','lib/ocr/core/tesseract-core-simd-lstm.wasm.js','lib/ocr/core/tesseract-core-lstm.wasm.js','lib/ocr/lang/fra.traineddata.gz'];
  toast('Téléchargement du lecteur de photos…',6000); try{ for(const f of files){ const r=await fetch(f); if(!r.ok) throw 0; await r.arrayBuffer(); } toast('✅ La lecture de photos marche maintenant sans Internet.',4000); }catch(e){ toast('Téléchargement impossible. Vérifiez Internet.'); } };
 
+/* ===================== SUIVI À DISTANCE PAR LES PARENTS (Supabase) =====================
+   Parent : compte (e-mail + mot de passe) → crée ses enfants → fixe les horaires de révision de la semaine.
+   Appareil de l'enfant : relié à un enfant → chaque séance est envoyée (début, sortie, durée active, activités, exercices).
+   Parent, à distance : voit pour chaque jour prévu si l'enfant a révisé, à quelle heure il est entré et sorti.
+   Tables et sécurité : source/supabase-suivi-parents.sql */
+const SB_CFG = () => ({ url:((window.JAL_SB&&JAL_SB.url)||S.sync.url||'').replace(/\/$/,''), key:(window.JAL_SB&&JAL_SB.key)||S.sync.key||'' });
+let SBC=null;
+async function sb(){ if(SBC) return SBC; const c=SB_CFG(); if(!c.url||!c.key) throw new Error('nocfg');
+ await loadScript('lib/supabase.js'); if(!window.supabase) throw new Error('nolib');
+ SBC=window.supabase.createClient(c.url, c.key, { auth:{ persistSession:true, autoRefreshToken:true, storageKey:'jal.sb.auth' } });
+ SBC.auth.onAuthStateChange((ev,session)=>{ CT.token=session?.access_token||null; });
+ return SBC; }
+const sbErr = e => { const m=(e&&e.message)||String(e); if(m==='nocfg') return 'Le suivi à distance n’est pas encore configuré.';
+ if(/Invalid login/i.test(m)) return 'E-mail ou mot de passe incorrect.'; if(/Email not confirmed/i.test(m)) return 'Confirmez d’abord votre adresse e-mail (lien reçu par e-mail).';
+ if(/already registered|already exists/i.test(m)) return 'Un compte existe déjà avec cet e-mail : connectez-vous.'; if(/Password should/i.test(m)) return 'Mot de passe trop court (6 caractères minimum).';
+ if(/Failed to fetch|NetworkError|network/i.test(m)) return 'Pas de connexion Internet.'; return m; };
+const Cloud = {
+ async user(){ const c=await sb(); const {data}=await c.auth.getSession(); CT.token=data.session?.access_token||null; return data.session?.user||null; },
+ async signUp(email,password,full_name,phone){ const c=await sb(); const {data,error}=await c.auth.signUp({email,password,options:{data:{full_name,phone}}}); if(error) throw error; return data; },
+ async signIn(email,password){ const c=await sb(); const {data,error}=await c.auth.signInWithPassword({email,password}); if(error) throw error; return data; },
+ async signOut(){ const c=await sb(); await c.auth.signOut(); CT.token=null; },
+ async children(){ const {data,error}=await (await sb()).from('children').select('*').order('created_at'); if(error) throw error; return data; },
+ async addChild(row){ const {data,error}=await (await sb()).from('children').insert(row).select().single(); if(error) throw error; return data; },
+ async updateChild(id,patch){ const {error}=await (await sb()).from('children').update(patch).eq('id',id); if(error) throw error; },
+ async deleteChild(id){ const {error}=await (await sb()).from('children').delete().eq('id',id); if(error) throw error; },
+ async schedules(ids){ if(!ids.length) return []; const {data,error}=await (await sb()).from('schedules').select('*').in('child_id',ids); if(error) throw error; return data; },
+ async saveSchedules(childId, rows){ const c=await sb(); let r=await c.from('schedules').delete().eq('child_id',childId); if(r.error) throw r.error; if(rows.length){ r=await c.from('schedules').insert(rows.map(x=>({...x, child_id:childId}))); if(r.error) throw r.error; } },
+ async sessions(ids, fromIso, toIso){ if(!ids.length) return []; let q=(await sb()).from('sessions').select('*').in('child_id',ids).order('started_at',{ascending:false}).limit(500); if(fromIso) q=q.gte('started_at',fromIso); if(toIso) q=q.lt('started_at',toIso); const {data,error}=await q; if(error) throw error; return data; },
+ async pushSessions(rows){ const {error}=await (await sb()).from('sessions').upsert(rows,{onConflict:'id'}); if(error) throw error; },
+ pushKeepalive(rows){ const c=SB_CFG(); if(!CT.token||!c.url) return false; try{ fetch(c.url+'/rest/v1/sessions?on_conflict=id',{method:'POST',keepalive:true,headers:{apikey:c.key,Authorization:'Bearer '+CT.token,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(rows)}); return true; }catch(e){ return false; } }
+};
+
+/* --- enregistrement des séances sur l'appareil de l'enfant --- */
+const CT = { cur:null, token:null, lastInput:Date.now(), lastFlush:0, flushing:false };
+const TRACK_SKIP = new Set(['lock','pin','parent','admin','settings','cloud','cloudChild','cloudLink','profiles','installHelp']);
+const IDLE_MS = 180000, RESUME_MS = 120000;
+const trackLinked = () => !!(S.cloud && S.cloud.childId && S.cloud.profileId===S.profile);
+const trackQueue = () => Store.get('jal.cloud.queue',{});
+function trackSave(){ const q=trackQueue(); if(CT.cur) q[CT.cur.id]=CT.cur; Store.set('jal.cloud.queue',q); if(CT.cur) Store.set('jal.cloud.last',CT.cur); }
+function actLabel(){ const n=CUR?.name||''; const lv=i=>LEVELS[i]?.name;
+ if(n==='exercise'||n==='result') return SES?.conj!=null ? 'Conjugaison' : (lv(SES?.i)||'Lecture');
+ if(n.startsWith('learn_')||n==='level'||n==='read') return lv(CUR.params?.i)||'Lecture';
+ if(n.startsWith('dict')) return 'Dictée'; if(n==='write') return 'Écriture'; if(n.startsWith('conj')) return 'Conjugaison';
+ if(n.startsWith('math')||n.startsWith('mq')) return 'Maths'; if(n==='reader') return 'Lire un texte'; if(n==='progress'||n==='rewards') return 'Récompenses'; return 'Accueil'; }
+function trackStart(){ const now=new Date().toISOString(); const last=Store.get('jal.cloud.last',null);
+ if(last && last.child_id===S.cloud.childId && Date.now()-Date.parse(last.ended_at) < RESUME_MS){ CT.cur=last; CT.cur.end_reason=null; }
+ else CT.cur={ id:(crypto.randomUUID?crypto.randomUUID():uid()+uid()+'-0000-4000-8000-'+Date.now().toString(16).padStart(12,'0').slice(-12)), child_id:S.cloud.childId, started_at:now, ended_at:now, duration_sec:0, exercises:0, correct:0, activities:{}, end_reason:null, device:(navigator.userAgentData?.platform||navigator.platform||'').slice(0,40) };
+ trackSave(); trackFlush(); }
+function trackEnd(reason, keepalive){ const s=CT.cur; if(!s) return; s.end_reason=reason; if(reason!=='inactif') s.ended_at=new Date().toISOString(); CT.cur=null;
+ const q=trackQueue(); q[s.id]=s; Store.set('jal.cloud.queue',q); Store.set('jal.cloud.last',s);
+ if(keepalive){ if(Cloud.pushKeepalive([s])){ delete q[s.id]; Store.set('jal.cloud.queue',q); } } else trackFlush(); }
+function trackTick(sec){ if(!trackLinked()){ if(CT.cur) trackEnd('pause'); return; }
+ const idle=Date.now()-CT.lastInput > IDLE_MS; const learning=CUR && !TRACK_SKIP.has(CUR.name) && !document.hidden && isOwnerDevice();
+ if(!learning || idle){ if(CT.cur) trackEnd(idle?'inactif':'pause'); return; }
+ if(!CT.cur) trackStart(); const s=CT.cur; s.duration_sec+=sec; const a=actLabel(); s.activities[a]=(s.activities[a]||0)+sec; s.ended_at=new Date().toISOString(); trackSave();
+ if(Date.now()-CT.lastFlush > 60000) trackFlush(); }
+async function trackFlush(){ if(CT.flushing||!navigator.onLine) return; const q=trackQueue(); const rows=Object.values(q); if(!rows.length) return; CT.flushing=true; CT.lastFlush=Date.now();
+ try{ if(!(await Cloud.user())) return; await Cloud.pushSessions(rows.map(r=>({...r}))); const q2=trackQueue(); rows.forEach(r=>{ if(r.end_reason && q2[r.id] && q2[r.id].end_reason) delete q2[r.id]; }); Store.set('jal.cloud.queue',q2); }
+ catch(e){} finally{ CT.flushing=false; } }
+const trackExercise = ok => { if(CT.cur){ CT.cur.exercises++; if(ok) CT.cur.correct++; } };
+['pointerdown','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{ CT.lastInput=Date.now(); },{passive:true,capture:true}));
+document.addEventListener('visibilitychange',()=>{ if(document.hidden){ if(CT.cur) trackEnd('quit', true); } else { CT.lastInput=Date.now(); setTimeout(()=>trackTick(0),300); } });
+window.addEventListener('pagehide',()=>{ if(CT.cur) trackEnd('closed', true); });
+window.addEventListener('online',()=>trackFlush());
+setInterval(()=>trackTick(5),5000);
+setTimeout(()=>{ if(trackLinked()) trackFlush(); },4000);
+
+/* --- calcul du rapport de la semaine (pur, testable) --- */
+const DAYS = ['','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+const isoDay = d => ((d.getDay()+6)%7)+1;
+const weekStart = (offset=0, now=new Date()) => { const d=new Date(now); d.setHours(0,0,0,0); d.setDate(d.getDate()-(isoDay(d)-1)+offset*7); return d; };
+const atTime = (day, hhmm) => { const [h,m]=String(hhmm).split(':').map(Number); const d=new Date(day); d.setHours(h||0,m||0,0,0); return d; };
+const hm = d => new Date(d).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+const mins = s => Math.round((s||0)/60);
+const fmtMin = m => m>=60 ? `${Math.floor(m/60)} h ${String(m%60).padStart(2,'0')}` : `${m} min`;
+function weekReport(schedules, sessions, ws, now=new Date()){ const days=[];
+ for(let k=0;k<7;k++){ const day=new Date(ws); day.setDate(ws.getDate()+k); const next=new Date(day); next.setDate(day.getDate()+1);
+  const plan=schedules.find(x=>x.weekday===k+1); const ss=sessions.filter(s=>{ const t=new Date(s.started_at); return t>=day && t<next; }).sort((a,b)=>Date.parse(a.started_at)-Date.parse(b.started_at));
+  const active=ss.reduce((a,s)=>a+(s.duration_sec||0),0); let inSlot=0, planned=0, status='libre';
+  if(plan){ const a=atTime(day,plan.start_time), b=atTime(day,plan.end_time); planned=(b-a)/1000;
+   ss.forEach(s=>{ const s0=new Date(s.started_at), s1=new Date(s.ended_at), wall=Math.max(1,(s1-s0)/1000); const ov=Math.max(0,(Math.min(b,s1)-Math.max(a,s0))/1000); inSlot+=ov*Math.min(1,(s.duration_sec||0)/wall); });
+   if(now<a) status='avenir'; else if(now<b && inSlot<planned*0.5) status='encours';
+   else if(inSlot>=planned*0.5) status='ok'; else if(active>=planned*0.5) status='decale'; else if(active>=120) status='partiel'; else status='non'; }
+  days.push({k, day, plan, sessions:ss, active, inSlot, planned, status}); }
+ const pl=days.filter(d=>d.plan&&['ok','decale','partiel','non'].includes(d.status));
+ return { days, totalActive:days.reduce((a,d)=>a+d.active,0), plannedTotal:days.reduce((a,d)=>a+d.planned,0), daysDone:pl.filter(d=>d.status==='ok'||d.status==='decale').length, daysDue:pl.length,
+  exercises:days.reduce((a,d)=>a+d.sessions.reduce((x,s)=>x+(s.exercises||0),0),0), correct:days.reduce((a,d)=>a+d.sessions.reduce((x,s)=>x+(s.correct||0),0),0) }; }
+const STATUS = { ok:['✅','Révisé','good'], decale:['🟠','Révisé, mais pas à l’heure prévue','warn'], partiel:['🟡','Un peu seulement','warn'], non:['❌','Pas révisé','bad'], avenir:['⏳','À venir',''], encours:['⏱️','C’est l’heure en ce moment',''], libre:['','Pas de révision prévue',''] };
+const END_REASON = { quit:'a quitté l’application', closed:'a fermé l’application', inactif:'inactif depuis 3 min', pause:'est allé dans les réglages' };
+const isLive = s => !s.end_reason && Date.now()-Date.parse(s.ended_at) < 150000;
+function sessionLine(s){ const acts=Object.entries(s.activities||{}).sort((a,b)=>b[1]-a[1]).filter(([,v])=>v>=30).map(([k,v])=>`${esc(k)} ${mins(v)} min`).join(', ');
+ const pct=s.exercises?Math.round(s.correct/s.exercises*100):null;
+ return `<div class="sess ${isLive(s)?'live':''}"><div class="row" style="justify-content:space-between"><b>${hm(s.started_at)} → ${isLive(s)?'<span class="live-dot">en ce moment</span>':hm(s.ended_at)}</b><span class="chip">${fmtMin(mins(s.duration_sec))}</span></div>
+  <div class="note">${s.end_reason?esc(END_REASON[s.end_reason]||s.end_reason):(isLive(s)?'🟢 en train de réviser':'séance interrompue')}${s.exercises?` · ${s.exercises} exercices (${pct} % justes)`:''}</div>${acts?`<div class="note">${acts}</div>`:''}</div>`; }
+
+/* --- écrans parents --- */
+let CL = { user:null, children:[], sched:[], sess:[], err:'', busy:false, tab:'login', loaded:false };
+async function clLoad(){ CL.busy=true; CL.err=''; try{ CL.user=await Cloud.user(); if(CL.user){ CL.children=await Cloud.children(); const ids=CL.children.map(c=>c.id); CL.sched=await Cloud.schedules(ids); const ws=weekStart(-1); CL.sess=await Cloud.sessions(ids, ws.toISOString()); } }
+ catch(e){ CL.err=sbErr(e); } CL.busy=false; CL.loaded=true; if(['cloud','cloudChild','cloudLink'].includes(CUR?.name)) rerender(); }
+ACT.cloudOpen = () => { CL.loaded=false; go('cloud'); clLoad(); };
+SCREENS.cloud = () => { const cfg=SB_CFG();
+ if(!cfg.url||!cfg.key) return `${topbar('Suivi à distance','<span></span>')}<div class="stack fade-in"><div class="card stack"><b>☁️ Configuration</b><p class="note" style="margin:0">Collez l’adresse du projet Supabase et la clé publique « anon » (Supabase → Project Settings → API).</p>
+   <input type="text" id="cl-url" placeholder="https://xxxx.supabase.co"><input type="text" id="cl-key" placeholder="Clé anon (eyJ…)"><button class="btn small" style="--c:var(--ink)" data-act="clCfg">Enregistrer</button></div></div>`;
+ if(!CL.loaded) return `${topbar('Suivi à distance','<span></span>')}<div class="stack fade-in" style="align-items:center"><p class="muted">Chargement…</p></div>`;
+ if(!CL.user) return `${topbar('Suivi à distance','<span></span>')}<div class="stack fade-in">
+   <div class="card"><b>👨‍👩‍👧 Suivez les révisions de vos enfants</b><p class="note" style="margin:6px 0 0">Créez un compte parent, ajoutez vos enfants, fixez leurs heures de révision, et voyez à distance s’ils ont révisé, quand ils ont commencé et quand ils ont quitté l’application.</p></div>
+   <div class="tabs"><button class="tab ${CL.tab==='login'?'on':''}" style="font-family:var(--f-display)" data-act="clTab" data-arg="login">Se connecter</button><button class="tab ${CL.tab==='signup'?'on':''}" style="font-family:var(--f-display)" data-act="clTab" data-arg="signup">Créer un compte</button></div>
+   <form id="cl-form" class="card stack" autocomplete="on">
+    ${CL.tab==='signup'?`<label class="field" for="cl-name">Nom du parent<input type="text" id="cl-name" autocomplete="name" required></label><label class="field" for="cl-phone">Téléphone<input type="text" id="cl-phone" inputmode="tel" autocomplete="tel" placeholder="6xx xx xx xx"></label>`:''}
+    <label class="field" for="cl-email">E-mail<input type="text" id="cl-email" inputmode="email" autocomplete="email" autocapitalize="off" required></label>
+    <label class="field" for="cl-pw">Mot de passe<div class="pw-wrap"><input type="password" id="cl-pw" autocomplete="${CL.tab==='signup'?'new-password':'current-password'}" minlength="6" required style="padding-right:56px"><button type="button" class="pw-eye" data-act="clEye" aria-label="Afficher le mot de passe">👁</button></div></label>
+    <button class="btn" style="--c:var(--ink)" type="submit" ${CL.busy?'disabled':''}>${CL.tab==='signup'?'Créer mon compte':'Se connecter'}</button>
+    ${CL.err?`<p class="note" style="color:var(--bad);margin:0">${esc(CL.err)}</p>`:''}${CL.msg?`<p class="note" style="color:var(--good);margin:0">${esc(CL.msg)}</p>`:''}</form></div>`;
+ const ws=weekStart(0); const link=S.cloud&&S.cloud.childId; const linkedChild=CL.children.find(c=>c.id===S.cloud?.childId);
+ return `${topbar('Suivi à distance','<span></span>')}<div class="stack fade-in">
+  <div class="row" style="justify-content:space-between"><span class="note">Connecté : <b>${esc(CL.user.email)}</b></span><button class="btn ghost small" data-act="clLogout">Se déconnecter</button></div>
+  ${CL.err?`<p class="note" style="color:var(--bad)">${esc(CL.err)}</p>`:''}
+  <h2 class="section-title">Mes enfants</h2>
+  ${CL.children.length?`<div class="list">${CL.children.map(c=>{ const r=weekReport(CL.sched.filter(x=>x.child_id===c.id), CL.sess.filter(x=>x.child_id===c.id), ws); const live=CL.sess.some(s=>s.child_id===c.id&&isLive(s));
+    return `<button class="li child-card" data-act="clChild" data-arg="${c.id}" style="text-align:left"><span style="font-size:38px">${esc(c.avatar)}</span><span class="grow"><b style="font-size:19px">${esc(c.name)}</b>${live?' <span class="live-dot">en train de réviser</span>':''}<br><span class="note">Cette semaine : ${r.daysDue?`${r.daysDone}/${r.daysDue} jours révisés · `:''}${fmtMin(mins(r.totalActive))}${r.exercises?` · ${r.exercises} exercices`:''}</span></span><span style="font-size:22px">›</span></button>`; }).join('')}</div>`
+   :'<p class="muted">Ajoutez votre premier enfant ci-dessous.</p>'}
+  <div class="card stack"><b>＋ Ajouter un enfant</b><input type="text" id="cl-cname" placeholder="Prénom" maxlength="40"><input type="text" id="cl-class" placeholder="Classe (ex. : CP, CE1…)" maxlength="20">
+   <div class="avatars">${AVATARS.map((a,i)=>`<button class="${(CL.av||0)===i?'on':''}" data-act="clAv" data-arg="${i}" aria-label="Avatar ${a}">${a}</button>`).join('')}</div>
+   <button class="btn small" style="--c:var(--leaf)" data-act="clAddChild" ${CL.busy?'disabled':''}>Ajouter</button></div>
+  <div class="card stack"><b>📱 Cet appareil</b>
+   ${link?`<p style="margin:0">Relié à <b>${esc(linkedChild?.name||S.cloud.childName||'un enfant')}</b> (profil « ${esc(PROFILES.find(p=>p.id===S.cloud.profileId)?.name||'?')} »). Les séances sont envoyées automatiquement.</p><p class="note" style="margin:0">Ne vous déconnectez pas sur cet appareil, sinon l’envoi s’arrête.</p><button class="btn ghost small" data-act="clUnlink">Délier cet appareil</button>`
+    :`<p class="note" style="margin:0">Sur le téléphone ou la tablette de l’enfant : reliez l’appareil à son prénom pour enregistrer ses séances.</p><button class="btn small" style="--c:var(--grape)" data-act="go" data-arg="cloudLink" ${CL.children.length?'':'disabled'}>Relier cet appareil à un enfant</button>`}
+   ${Object.keys(trackQueue()).length?`<p class="note" style="margin:0">${Object.keys(trackQueue()).length} séance(s) en attente d’envoi (Internet).</p>`:''}</div></div>`; };
+AFTER.cloud = () => { const f=$('#cl-form'); if(!f) return; f.addEventListener('submit', async e=>{ e.preventDefault(); const email=$('#cl-email').value.trim(), pw=$('#cl-pw').value; CL.err=''; CL.msg=''; CL.busy=true; rerender();
+ try{ if(CL.tab==='signup'){ const d=await Cloud.signUp(email,pw,$('#cl-name')?.value.trim()||'', $('#cl-phone')?.value.trim()||''); if(!d.session){ CL.msg='Compte créé ! Ouvrez le lien reçu par e-mail, puis connectez-vous.'; CL.tab='login'; CL.busy=false; rerender(); return; } }
+  else await Cloud.signIn(email,pw); CL.busy=false; await clLoad(); toast('Connecté ✓'); }
+ catch(err){ CL.busy=false; CL.err=sbErr(err); rerender(); } }); };
+ACT.clTab = a => { CL.tab=a; CL.err=''; CL.msg=''; rerender(); };
+ACT.clEye = (a,el) => { const i=el.parentElement.querySelector('input'); i.type=i.type==='password'?'text':'password'; el.textContent=i.type==='password'?'👁':'🙈'; };
+ACT.clCfg = () => { const url=$('#cl-url').value.trim(), key=$('#cl-key').value.trim(); if(!/^https:\/\/.+/.test(url)||key.length<20){ toast('Adresse ou clé invalide.'); return; } S.sync={url,key}; saveSettings(); SBC=null; CL.loaded=false; rerender(); clLoad(); };
+ACT.clLogout = () => confirmBox(trackLinked()?'Se déconnecter ? Cet appareil n’enverra plus les séances de l’enfant.':'Se déconnecter du suivi ?', async()=>{ try{ await Cloud.signOut(); }catch(e){} CL.user=null; CL.children=[]; rerender(); });
+ACT.clAv = a => { CL.av=+a; const n=$('#cl-cname')?.value, c=$('#cl-class')?.value; rerender(); if($('#cl-cname')) $('#cl-cname').value=n||''; if($('#cl-class')) $('#cl-class').value=c||''; };
+ACT.clAddChild = async () => { const name=$('#cl-cname').value.trim(); if(!name){ toast('Écrivez le prénom.'); return; } CL.busy=true;
+ try{ const c=await Cloud.addChild({name, avatar:AVATARS[CL.av||0], class_level:$('#cl-class').value.trim()||null}); CL.children.push(c); CL.busy=false; toast(`${name} ajouté(e) ✓`); go('cloudChild',{id:c.id, tab:'horaires', w:0}); }
+ catch(e){ CL.busy=false; toast(sbErr(e)); rerender(); } };
+ACT.clUnlink = () => confirmBox('Délier cet appareil ? Les séances ne seront plus envoyées.', ()=>{ if(CT.cur) trackEnd('pause'); trackFlush(); S.cloud=null; saveSettings(); rerender(); });
+ACT.clChild = a => go('cloudChild',{id:a, tab:'semaine', w:0});
+
+SCREENS.cloudLink = p => `${topbar('Relier cet appareil','<span></span>')}<div class="stack fade-in">
+ <p>Quel enfant utilise cet appareil ?</p><div class="list">${CL.children.map(c=>`<button class="li ${p.c===c.id?'sel-li':''}" data-act="clPickChild" data-arg="${c.id}" style="text-align:left"><span style="font-size:32px">${esc(c.avatar)}</span><b class="grow">${esc(c.name)}</b>${p.c===c.id?'✓':''}</button>`).join('')}</div>
+ <p>Avec quel profil de l’application ?</p><div class="list">${PROFILES.map(pr=>`<button class="li ${(p.pr||S.profile)===pr.id?'sel-li':''}" data-act="clPickProf" data-arg="${pr.id}" style="text-align:left"><span style="font-size:28px">${pr.avatar}</span><span class="grow">${esc(pr.name)}</span>${(p.pr||S.profile)===pr.id?'✓':''}</button>`).join('')}</div>
+ <button class="btn" style="--c:var(--grape)" data-act="clDoLink" ${p.c?'':'disabled'}>Relier</button></div>`;
+ACT.clPickChild = a => { CUR.params.c=a; rerender(); };
+ACT.clPickProf = a => { CUR.params.pr=a; rerender(); };
+ACT.clDoLink = () => { const p=CUR.params, c=CL.children.find(x=>x.id===p.c); const pr=p.pr||S.profile; S.cloud={childId:c.id, childName:c.name, profileId:pr}; if(S.profile!==pr) switchProfile(pr); saveSettings(); toast(`Appareil relié à ${c.name} ✓`); back(); };
+
+SCREENS.cloudChild = p => { const c=CL.children.find(x=>x.id===p.id); if(!c) return `${topbar('Enfant','<span></span>')}<p class="muted">Enfant introuvable.</p>`;
+ const sched=CL.sched.filter(x=>x.child_id===c.id); const sess=(p.sess||CL.sess).filter(x=>x.child_id===c.id); const ws=weekStart(p.w||0); const we=new Date(ws); we.setDate(ws.getDate()+6);
+ const fmtD=d=>d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); let body='';
+ if(p.tab==='horaires'){ const by={}; sched.forEach(x=>by[x.weekday]=x); const draft=p.draft||Object.fromEntries([1,2,3,4,5,6,7].map(d=>[d, by[d]?{on:true,s:by[d].start_time.slice(0,5),e:by[d].end_time.slice(0,5)}:{on:false,s:'16:00',e:'17:00'}])); CUR.params.draft=draft;
+  const nDays=Object.values(draft).filter(x=>x.on).length, tot=Object.values(draft).filter(x=>x.on).reduce((a,x)=>a+Math.max(0,(atTime(new Date(),x.e)-atTime(new Date(),x.s))/60000),0);
+  body=`<p class="note">Cochez les jours de révision et l’heure. L’application vérifie chaque jour si ${esc(c.name)} a révisé pendant ce créneau.</p>
+   <div class="sched">${[1,2,3,4,5,6,7].map(d=>{ const x=draft[d]; return `<div class="sched-row ${x.on?'on':''}"><label class="row" style="gap:8px;flex:1;min-width:120px"><input type="checkbox" data-sch="${d}:on" ${x.on?'checked':''}> <b>${DAYS[d]}</b></label>
+    <input type="time" data-sch="${d}:s" value="${x.s}" ${x.on?'':'disabled'} aria-label="Début ${DAYS[d]}"><span>→</span><input type="time" data-sch="${d}:e" value="${x.e}" ${x.on?'':'disabled'} aria-label="Fin ${DAYS[d]}"></div>`; }).join('')}</div>
+   <p class="note" id="sch-sum"><b>${nDays} jour${nDays>1?'s':''} par semaine</b> · ${fmtMin(Math.round(tot))} de révision prévue</p>
+   <button class="btn" style="--c:var(--leaf)" data-act="clSaveSched">💾 Enregistrer les horaires</button>`; }
+ else if(p.tab==='seances'){ body = sess.length ? `<div class="stack">${sess.slice(0,60).map(s=>`<div><div class="note" style="font-weight:700">${new Date(s.started_at).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})}</div>${sessionLine(s)}</div>`).join('')}</div>` : '<p class="muted">Aucune séance enregistrée pour l’instant.</p>'; }
+ else { const r=weekReport(sched, sess, ws); const pct=r.exercises?Math.round(r.correct/r.exercises*100):null;
+  body=`<div class="pager"><button class="btn ghost small" data-act="clWeek" data-arg="-1">‹</button><b>Semaine du ${fmtD(ws)} au ${fmtD(we)}</b><button class="btn ghost small" data-act="clWeek" data-arg="1" ${(p.w||0)>=0?'disabled':''}>›</button></div>
+   ${!sched.length?`<div class="card"><p style="margin:0">Aucun horaire fixé. <button class="btn small" style="--c:var(--leaf)" data-act="clTabC" data-arg="horaires">Fixer les horaires</button></p></div>`:''}
+   <div class="stats"><div class="stat"><b>${r.daysDue?`${r.daysDone} / ${r.daysDue}`:'—'}</b><span>jours révisés</span></div><div class="stat"><b>${fmtMin(mins(r.totalActive))}</b><span>temps de révision${r.plannedTotal?` (prévu ${fmtMin(mins(r.plannedTotal))})`:''}</span></div><div class="stat"><b>${r.exercises}</b><span>exercices${pct!=null?` · ${pct} % justes`:''}</span></div></div>
+   <div class="stack">${r.days.map(d=>{ const st=STATUS[d.status]; if(!d.plan&&!d.sessions.length) return ''; return `<div class="card day ${st[2]}"><div class="row" style="justify-content:space-between"><b>${DAYS[d.k+1]} ${fmtD(d.day)}</b>${d.plan?`<span class="note">prévu ${d.plan.start_time.slice(0,5)} → ${d.plan.end_time.slice(0,5)}</span>`:''}</div>
+     <div class="day-status">${st[0]} ${st[1]}${d.plan&&d.sessions.length?` · ${fmtMin(mins(d.inSlot))} pendant le créneau`:''}${d.sessions.length?` · ${fmtMin(mins(d.active))} au total`:''}</div>
+     ${d.sessions.map(sessionLine).join('')}</div>`; }).join('')}</div>`; }
+ return `${topbar(esc(c.avatar+' '+c.name),'<span></span>')}<div class="stack fade-in">
+  <div class="tabs">${[['semaine','📅 Semaine'],['horaires','⏰ Horaires'],['seances','🕒 Séances']].map(([t,l])=>`<button class="tab ${p.tab===t?'on':''}" style="font-family:var(--f-display)" data-act="clTabC" data-arg="${t}">${l}</button>`).join('')}<button class="tab" style="font-family:var(--f-display)" data-act="clRefresh">🔄</button></div>
+  ${body}
+  <div class="row"><button class="btn ghost small grow" data-act="clRename" data-arg="${c.id}">✏️ Renommer</button><button class="btn small grow" style="--c:var(--bad)" data-act="clDelChild" data-arg="${c.id}">🗑 Supprimer</button></div></div>`; };
+ACT.clTabC = a => { CUR.params.tab=a; CUR.params.draft=null; rerender(); };
+ACT.clWeek = async a => { const p=CUR.params; p.w=Math.min(0,(p.w||0)+ +a); const ws=weekStart(p.w), we=new Date(ws); we.setDate(ws.getDate()+7);
+ try{ p.sess=await Cloud.sessions([p.id], ws.toISOString(), we.toISOString()); }catch(e){ toast(sbErr(e)); } rerender(); };
+ACT.clRefresh = async () => { toast('Actualisation…',1200); await clLoad(); CUR.params.sess=null; };
+ACT.clSaveSched = async () => { const p=CUR.params, rows=[]; for(const [d,x] of Object.entries(p.draft)){ if(!x.on) continue; if(!(x.e>x.s)){ toast(`${DAYS[d]} : l’heure de fin doit être après le début.`); return; } rows.push({weekday:+d, start_time:x.s, end_time:x.e}); }
+ try{ await Cloud.saveSchedules(p.id, rows); CL.sched=CL.sched.filter(x=>x.child_id!==p.id).concat(rows.map(r=>({...r, child_id:p.id, start_time:r.start_time+':00', end_time:r.end_time+':00'}))); toast('Horaires enregistrés ✓'); p.tab='semaine'; p.draft=null; rerender(); }
+ catch(e){ toast(sbErr(e)); } };
+ACT.clRename = a => { const c=CL.children.find(x=>x.id===a); modal(`<h3>Renommer</h3><input type="text" id="cl-rn" value="${esc(c.name)}" maxlength="40">`,[{label:'Annuler',ghost:true},{label:'Enregistrer',color:'var(--leaf)',fn:async()=>{ const v=CL._rn; if(!v) return; try{ await Cloud.updateChild(a,{name:v}); c.name=v; rerender(); }catch(e){ toast(sbErr(e)); } }}]); const i=$('#cl-rn'); CL._rn=c.name; i.addEventListener('input',()=>CL._rn=i.value.trim()); };
+ACT.clDelChild = a => confirmBox('Supprimer cet enfant et tout son suivi ?', async()=>{ try{ await Cloud.deleteChild(a); CL.children=CL.children.filter(x=>x.id!==a); if(S.cloud?.childId===a){ S.cloud=null; saveSettings(); } back(); }catch(e){ toast(sbErr(e)); } });
+document.addEventListener('change', e=>{ const t=e.target; if(!t.dataset||!t.dataset.sch||CUR?.name!=='cloudChild') return; const [d,f]=t.dataset.sch.split(':'); const dr=CUR.params.draft; if(f==='on') dr[d].on=t.checked; else dr[d][f]=t.value; const y=scrollY; rerender(); scrollTo(0,y); });
+
 /* ----- Ma progression (enfant) ----- */
 SCREENS.progress = () => { const li=currentLevel(); const rev=Object.keys(P.review);
  return `${topbar('Ma progression')}<div class="stack fade-in">
@@ -1711,6 +1901,7 @@ SCREENS.parent = p => { const pid=p.pid||S.profile; const pr=PROFILES.find(x=>x.
   <h2 class="section-title">Exercices à revoir</h2>
   ${Object.keys(pg.review).length?`<div class="review-chips">${Object.keys(pg.review).map(k=>`<span class="syl-chip">${esc(itemLabel(k))}</span>`).join('')}</div>`:'<p class="muted">Rien à revoir.</p>'}
   <p class="note">Un élément quitte la liste « à revoir » après deux bonnes réponses.</p>
+  <button class="btn" style="--c:var(--grape)" data-act="cloudOpen">☁️ Suivi à distance des enfants</button>
   <div class="row"><button class="btn ghost small" data-act="renameProfile" data-arg="${pr.id}">✏️ Renommer</button><button class="btn small" style="--c:var(--warn)" data-act="resetProfile" data-arg="${pr.id}">↺ Remettre à zéro</button>${PROFILES.length>1?`<button class="btn small" style="--c:var(--bad)" data-act="delProfile" data-arg="${pr.id}">🗑 Supprimer</button>`:''}</div></div>`; };
 ACT.parentPick = a => { CUR.params.pid=a; rerender(); };
 ACT.renameProfile = a => { const pr=PROFILES.find(x=>x.id===a); modal(`<h3>Renommer</h3><input type="text" id="rn" value="${esc(pr.name)}" maxlength="24">`,[{label:'Annuler',ghost:true},{label:'Enregistrer',color:'var(--leaf)',fn:()=>{}}]); const inp=$('#rn'); const btn=$$('.modal [data-i]')[1]; btn.addEventListener('click',()=>{ const v=inp.value.trim(); if(v){ pr.name=v; saveSettings(); rerender(); } },{capture:true}); };

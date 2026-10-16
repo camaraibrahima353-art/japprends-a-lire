@@ -30,12 +30,17 @@ head=f"""<!doctype html>
 <style>{''.join(ff)}
 :root{{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}} body{{margin:0}} img{{max-width:100%}} [hidden]{{display:none!important}}
 html{{-webkit-text-size-adjust:100%}} body{{overscroll-behavior-y:contain;user-select:none;-webkit-user-select:none}} input,textarea{{user-select:text;-webkit-user-select:text}}</style>
-<script>window.JAL_PWA=true;window.JAL_VERSION='__APPVER__';</script>
+<script>window.JAL_PWA=true;window.JAL_VERSION='__APPVER__';__SBCFG__</script>
 """
 src=src.replace('</style>\n\n<div id="app"','</style>\n</head>\n<body>\n<div id="app"',1)
 assert '<body>' in src
 html=head+src+'\n</body>\n</html>\n'
 import datetime
+sbp=os.path.join(ROOT,'supabase.json')
+sbcfg=''
+if os.path.exists(sbp):
+    _c=json.load(open(sbp)); sbcfg='window.JAL_SB='+json.dumps({'url':_c['url'],'key':_c['anon_key']})+';'
+html=html.replace('__SBCFG__', sbcfg)
 html=html.replace('__APPVER__', datetime.datetime.utcnow().strftime('%Y.%m.%d-%H%M')+'-'+hashlib.sha1(src.encode()).hexdigest()[:6])
 open(os.path.join(PWA,'index.html'),'w',encoding='utf-8').write(html)
 # liste des fichiers à mettre en cache

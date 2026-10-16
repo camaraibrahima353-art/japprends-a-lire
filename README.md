@@ -99,6 +99,16 @@ Chaque leçon : tableau de conjugaison (terminaisons en couleur, 🔊 sur chaque
 - 💾 Garder dans « Mes textes », ⌨️ écrire ou coller un texte.
 - Le module photo (≈ 5 Mo) se télécharge à la première utilisation, ou d'avance : Paramètres → « Préparer la lecture de photos hors ligne ».
 
+## Suivi à distance par les parents (Supabase)
+Espace parent → **☁️ Suivi à distance des enfants**.
+- **Compte parent** (e-mail + mot de passe, nom, téléphone). Chaque parent ne voit que ses propres enfants (sécurité RLS de Supabase).
+- **Enfants** : prénom, classe, avatar.
+- **Horaires** : jours de révision de la semaine et créneau (ex. lundi, mercredi, vendredi 16 h → 17 h).
+- **Relier l'appareil de l'enfant** : sur sa tablette ou son téléphone, le parent se connecte une fois et choisit l'enfant et le profil de l'application.
+- **Séances enregistrées automatiquement** : heure d'entrée, heure de sortie, durée active, activités (Maths, Dictée, Syllabes…), exercices faits et réussis, raison de la fin (a quitté l'application, l'a fermée, inactif 3 min). Hors ligne, les séances attendent et partent dès qu'Internet revient. Une sortie de moins de 2 minutes ne coupe pas la séance.
+- **Semaine** : pour chaque jour prévu ✅ Révisé (au moins la moitié du créneau), 🟠 Révisé mais pas à l'heure prévue, 🟡 Un peu seulement, ❌ Pas révisé, ⏳ À venir ; « en train de réviser » en direct ; semaines précédentes.
+- **Mise en route** : coller `source/supabase-suivi-parents.sql` dans Supabase (SQL Editor → Run), puis mettre l'adresse du projet et la clé `anon` dans `source/supabase.json` (`{"url": "...", "anon_key": "..."}`) et relancer `python3 source/build.py`. Ne jamais mettre la clé `service_role` dans l'application.
+
 ## Accès privé
 L'application installée demande un **code d'accès** au premier lancement sur chaque appareil (le code n'est pas dans ce dépôt, seule son empreinte SHA-256 y est ; il respecte les majuscules et les symboles). Paramètres → « Verrouiller cet appareil » pour le redemander.
 
