@@ -96,7 +96,7 @@ Chaque leçon : tableau de conjugaison (terminaisons en couleur, 🔊 sur chaque
 - Marche avec du texte imprimé. L'écriture à la main est mal reconnue.
 
 ## Accès privé
-L'application installée demande un **code d'accès** au premier lancement sur chaque appareil (le code n'est pas dans ce dépôt, seule son empreinte SHA-256 y est). Paramètres → « Verrouiller cet appareil » pour le redemander.
+L'application installée demande un **code d'accès** au premier lancement sur chaque appareil (le code n'est pas dans ce dépôt, seule son empreinte SHA-256 y est ; il respecte les majuscules et les symboles). Paramètres → « Verrouiller cet appareil » pour le redemander.
 
 ## Langues
 - **Français** (alphabet latin). D'autres langues pourront être ajoutées.

@@ -1691,7 +1691,7 @@ document.addEventListener('visibilitychange', ()=>{ if(document.hidden) saveProg
 
 
 /* ----- Accès réservé au propriétaire ----- */
-const OWNER_HASH = '37804d7190ca7f313bb061e30a3cd4306a25c834162d57de860e0efa718d65d0';
+const OWNER_HASH = '37a80ec05c03bcf92d1e40051fb44d0d02dd1da78a34e1e7511d42f04eb41205';
 const isOwnerDevice = () => !window.JAL_PWA || Store.get('jal.owner',null)===OWNER_HASH;
 async function sha256(t){ const b=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
 let LOCK_TRIES=0, LOCK_UNTIL=0;
@@ -1699,12 +1699,12 @@ SCREENS.lock = () => `<div class="stack fade-in" style="align-items:center;text-
  <div class="logo" aria-hidden="true">🔒</div><h1 style="font-size:28px">Application privée</h1>
  <p class="muted" style="max-width:30ch">Cette application est réservée. Entrez le code d’accès pour l’ouvrir.</p>
  <form id="lock-form" class="stack" style="width:100%;max-width:320px" autocomplete="off">
-  <input type="password" id="lock-code" placeholder="Code d’accès" autocomplete="off" autocapitalize="characters" style="text-align:center;font-size:22px;letter-spacing:3px">
+  <input type="password" id="lock-code" placeholder="Code d’accès" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="text-align:center;font-size:22px;letter-spacing:2px">
   <button class="btn" style="--c:var(--ink)" type="submit">Ouvrir</button></form>
  <p class="note" id="lock-msg"></p></div>`;
 AFTER.lock = () => { const f=$('#lock-form'); if(!f) return; f.addEventListener('submit', async e=>{ e.preventDefault(); const m=$('#lock-msg');
   if(Date.now()<LOCK_UNTIL){ m.textContent=`Trop d’essais. Réessayez dans ${Math.ceil((LOCK_UNTIL-Date.now())/1000)} s.`; return; }
-  const v=($('#lock-code').value||'').toUpperCase().replace(/[^A-Z0-9]/g,''); if(!v) return;
+  const v=($('#lock-code').value||'').trim(); if(!v) return;
   let h=''; try{ h=await sha256(v); }catch(_){ m.textContent='Ouvrez l’application avec son adresse https.'; return; }
   if(h===OWNER_HASH){ Store.set('jal.owner',OWNER_HASH); LOCK_TRIES=0; CUR=null; NAV=[]; go('home',{},true); toast('Bienvenue !'); return; }
   LOCK_TRIES++; sfxBad(); $('#lock-code').value=''; if(LOCK_TRIES>=5){ LOCK_UNTIL=Date.now()+60000; LOCK_TRIES=0; m.textContent='Code incorrect. Patientez 1 minute.'; } else m.textContent='Code incorrect.'; }); setTimeout(()=>$('#lock-code')?.focus(),100); };
