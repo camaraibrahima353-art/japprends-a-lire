@@ -61,23 +61,23 @@ alter table public.sessions  enable row level security;
 
 drop policy if exists "parent: son profil" on public.parents;
 create policy "parent: son profil" on public.parents
-  for all to authenticated using (id = auth.uid()) with check (id = auth.uid());
+  for all to authenticated using (id = (select auth.uid())) with check (id = (select auth.uid()));
 
 drop policy if exists "parent: ses enfants" on public.children;
 create policy "parent: ses enfants" on public.children
-  for all to authenticated using (parent_id = auth.uid()) with check (parent_id = auth.uid());
+  for all to authenticated using (parent_id = (select auth.uid())) with check (parent_id = (select auth.uid()));
 
 drop policy if exists "parent: horaires de ses enfants" on public.schedules;
 create policy "parent: horaires de ses enfants" on public.schedules
   for all to authenticated
-  using (exists (select 1 from public.children c where c.id = child_id and c.parent_id = auth.uid()))
-  with check (exists (select 1 from public.children c where c.id = child_id and c.parent_id = auth.uid()));
+  using (exists (select 1 from public.children c where c.id = child_id and c.parent_id = (select auth.uid())))
+  with check (exists (select 1 from public.children c where c.id = child_id and c.parent_id = (select auth.uid())));
 
 drop policy if exists "parent: séances de ses enfants" on public.sessions;
 create policy "parent: séances de ses enfants" on public.sessions
   for all to authenticated
-  using (exists (select 1 from public.children c where c.id = child_id and c.parent_id = auth.uid()))
-  with check (exists (select 1 from public.children c where c.id = child_id and c.parent_id = auth.uid()));
+  using (exists (select 1 from public.children c where c.id = child_id and c.parent_id = (select auth.uid())))
+  with check (exists (select 1 from public.children c where c.id = child_id and c.parent_id = (select auth.uid())));
 
 grant select, insert, update, delete on public.parents, public.children, public.schedules, public.sessions to authenticated;
 revoke all on public.parents, public.children, public.schedules, public.sessions from anon;
@@ -91,12 +91,13 @@ begin
   on conflict (id) do nothing;
   return new;
 end $$;
+revoke execute on function public.handle_new_parent() from public, anon, authenticated;
 drop trigger if exists on_auth_user_created_parent on auth.users;
 create trigger on_auth_user_created_parent after insert on auth.users
   for each row execute function public.handle_new_parent();
 
 -- 7. Date de mise à jour des séances
-create or replace function public.touch_updated_at() returns trigger language plpgsql as $$
+create or replace function public.touch_updated_at() returns trigger language plpgsql set search_path = public as $$
 begin new.updated_at := now(); return new; end $$;
 drop trigger if exists sessions_touch on public.sessions;
 create trigger sessions_touch before update on public.sessions
